@@ -29,7 +29,7 @@
       "location": "Waterloo, Canada",
       "url": "https://www.uwaterloo.ca/",
       "area": "Mathematics",
-      "studyType": "Undergrad",
+      "studyType": "Undergrad 2B",
       "startDate": "2022-09-01",
       "endDate": "2027-05-01",
       "GPA": "3.7",
@@ -54,7 +54,7 @@
   ],
   "languages": [
     {
-      "language": "German",
+      "language": "Korean",
       "fluency": "Native speaker",
       "icon": ""
     },
