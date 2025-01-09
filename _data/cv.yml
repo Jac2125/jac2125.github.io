@@ -15,12 +15,10 @@
       institution: University of Waterloo, Waterloo, Canada
       year: 2027
       description:
-        - Description 1.
-        - Description 2.
-        - title: Description 3.
+        - title: Major
           contents:
-            - Sub-description 1.
-            - Sub-description 2.
+            - Combinatorics & Optimization
+            - Statistics
 
 - title: Experience
   type: time_table
