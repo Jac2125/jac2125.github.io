@@ -37,7 +37,29 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{id: "news-a-simple-inline-announcement",
+        },{id: "post-circulant-matrix-and-eigenvectors-amp-values",
+      
+        title: "Circulant Matrix And Eigenvectors&amp;values",
+      
+      description: "",
+      section: "Posts",
+      handler: () => {
+        
+          window.location.href = "/blog/2024/Circulant-Matrix-and-Eigenvectors&values/";
+        
+      },
+    },{id: "post-a-brief-intro-to-spectral-graph-theory",
+      
+        title: "A Brief Intro To Spectral Graph Theory",
+      
+      description: "",
+      section: "Posts",
+      handler: () => {
+        
+          window.location.href = "/blog/2024/A-Brief-intro-to-Spectral-Graph-Theory/";
+        
+      },
+    },{id: "news-a-simple-inline-announcement",
           title: 'A simple inline announcement.',
           description: "",
           section: "News",},{id: "news-a-long-announcement-with-details",
