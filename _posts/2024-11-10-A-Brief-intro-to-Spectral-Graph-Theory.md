@@ -1,3 +1,13 @@
+---
+layout: post
+title: A Brief Intro to Spectral Graph Theory
+date: 2015-10-20 11:12:00-0400
+description: 
+tags: formatting math
+categories: math
+related_posts: false
+---
+
 # 3.1 Basic Properties of the Laplacian Matrix
 > [!Definition 3.1]
 > Suppose $G = (V,E)$ is a graph with $V = {1,2,...,n}$. For an edge ${u, v} \in E$, we define an $n \times n$ matrix $L_{G_{\{u,v\}}}$ by
