@@ -37,26 +37,26 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{id: "post-circulant-matrix-and-eigenvectors-amp-values",
+        },{id: "post-circulant-matrix-eigenvectors-values",
       
-        title: "Circulant Matrix And Eigenvectors&amp;values",
+        title: "Circulant Matrix + Eigenvectors/values",
       
       description: "",
       section: "Posts",
       handler: () => {
         
-          window.location.href = "/blog/2024/Circulant-Matrix-and-Eigenvectors&values/";
+          window.location.href = "/blog/2015/Circulant-Matrix-and-Eigenvectors&values/";
         
       },
     },{id: "post-a-brief-intro-to-spectral-graph-theory",
       
-        title: "A Brief Intro To Spectral Graph Theory",
+        title: "A Brief Intro to Spectral Graph Theory",
       
       description: "",
       section: "Posts",
       handler: () => {
         
-          window.location.href = "/blog/2024/A-Brief-intro-to-Spectral-Graph-Theory/";
+          window.location.href = "/blog/2015/A-Brief-intro-to-Spectral-Graph-Theory/";
         
       },
     },{id: "news-a-simple-inline-announcement",
