@@ -1,13 +1,3 @@
----
-layout: post
-title: A Circulant Matrix + Eigenvectors/values
-date: 2015-10-20 11:12:00-0400
-description: 
-tags: formatting math
-categories: math
-related_posts: false
----
-
 # 1. Problem
 ![[Pasted image 20241029213125.png]]
 Here is the proposition regarding the eigenvalues of Laplacian Matrix $C_n$
