@@ -11,7 +11,7 @@ related_posts: false
 
 # 3.1 Basic Properties of the Laplacian Matrix
 ## Definition 3.1
-> Suppose $G = (V,E)$ is a graph with $V = {1,2,...,n}$. For an edge ${u, v} \in E$, we define an $n \times n$ matrix $L_{G_{\{u,v\}}}$ by
+> Suppose $$G = (V,E)$$ is a graph with $$V = {1,2,...,n}$$. For an edge ${u, v} \in E$, we define an $n \times n$ matrix $$L_{G_{\{u,v\}}}$$ by \\
 > $$l_{G_{(u,v)}}(i,j) = \begin{cases} 1 & \text{if } i = j \text{ and } i \in \{u,v\}, \\ 
 -1 & \text{if } i = u \text{ and } j = v, \text{ or vice versa,} \\ 
 0 & \text{otherwise.} 
