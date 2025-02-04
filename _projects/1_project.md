@@ -15,7 +15,7 @@ Here is the chip configuration
 
 <div class = "row justify-content-sm-center">
     <div class = "col-sm">
-        {% include figure.liquid path = "assets/img/PC13 GPIO Pin Chip Config.png", title = "Chip Configuration", class "img-fluid rounded z-depth-1" %}
+        {% include figure.liquid path = "assets/img/PC13 GPIO Pin Chip Config.png" title = "Chip Configuration" class "img-fluid rounded z-depth-1" %}
     </div>
 </div>
 
