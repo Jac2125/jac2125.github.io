@@ -18,3 +18,39 @@ Here is the chip configuration
         {% include figure.liquid path = "assets/img/PC13 GPIO Pin Chip Config.png", title = "Chip Configuration", class "img-fluid rounded z-depth-1" %}
     </div>
 </div>
+
+The code will be generated when the config is saved.
+
+```
+#include "main.h"
+
+void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
+
+int main(void)
+{
+
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  HAL_Init();
+  
+  /* Configure the system clock */
+  SystemClock_Config();
+
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  while (1)
+  {
+    /* USER CODE END WHILE */
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13,1);
+	HAL_Delay(250);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13,0);
+	HAL_Delay(250);
+  }
+}
+
+```
+
+The function `HAL_GPIO_writePIn` would turn on GPIO 13 when the third arg is 1. Otherwise, when it is 0, the pin will be set to low.
