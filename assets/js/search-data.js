@@ -45,7 +45,7 @@ ninja.data = [{
       section: "Posts",
       handler: () => {
         
-          window.location.href = "/blog/2015/Circulant-Matrix-and-Eigenvectors&values/";
+          window.location.href = "/blog/2024/Circulant-Matrix-and-Eigenvectors&values/";
         
       },
     },{id: "post-a-brief-intro-to-spectral-graph-theory",
@@ -56,7 +56,7 @@ ninja.data = [{
       section: "Posts",
       handler: () => {
         
-          window.location.href = "/blog/2015/A-Brief-intro-to-Spectral-Graph-Theory/";
+          window.location.href = "/blog/2024/A-Brief-intro-to-Spectral-Graph-Theory/";
         
       },
     },{id: "news-a-simple-inline-announcement",
