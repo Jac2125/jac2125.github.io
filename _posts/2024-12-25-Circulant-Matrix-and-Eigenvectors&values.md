@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Circulant Matrix + Eigenvectors/values
-date: 2015-10-20 11:12:00-0400
+date: 2024-12-15 11:12:00-0400
 description: 
 tags: formatting math
 categories: math

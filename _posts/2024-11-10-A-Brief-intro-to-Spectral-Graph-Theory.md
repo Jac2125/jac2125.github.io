@@ -1,7 +1,7 @@
 ---
 layout: post
 title: A Brief Intro to Spectral Graph Theory
-date: 2015-10-20 11:12:00-0400
+date: 2024-11-10 11:12:00-0400
 description: 
 tags: formatting math
 categories: math
