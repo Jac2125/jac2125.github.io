@@ -33,22 +33,34 @@
       "startDate": "2022-09-01",
       "endDate": "2027-05-01",
       "GPA": "3.7",
-      "courses": ["Theory of Relativity"]
+      "courses": ["Intro to Optimization", 
+                  "Intro to Combinatorics",
+                  "Statistics"]
     }
   ],
 
   "skills": [
     {
-      "name": "Physics",
-      "level": "Master",
+      "name": "Programming",
+      "level": "Advanced",
       "icon": "fa-solid fa-hashtag",
       "keywords": [
-        "Quantum Mechanics",
-        "Quantum Computing",
-        "Quantum Information",
-        "Quantum Cryptography",
-        "Quantum Communication",
-        "Quantum Teleportation"
+        "Python",
+        "C/C++",
+        "Java",
+        "R",
+        "SQL"
+      ]
+    },
+    {
+      "name": "AI Modeling",
+      "level": "Moderate",
+      "icon": "fa-solid fa-hashtag",
+      "keywords": [
+        "Keras, PyTorch, ML",
+        "Data Analysis",
+        "AI in Economy",
+        "AI in Finance"
       ]
     }
   ],
@@ -66,25 +78,23 @@
   ],
   "interests": [
     {
-      "name": "Physics",
+      "name": "Optimization",
       "icon": "fa-solid fa-tag",
       "keywords": [
-        "Quantum Mechanics",
-        "Quantum Computing",
-        "Quantum Information",
-        "Quantum Cryptography",
-        "Quantum Communication",
-        "Quantum Teleportation"
+        "Combinatorial Optimization",
+        "Optimization Algorithm",
+        "AI Optimization",
+        "Portfolio Optimization"
       ]
     }
   ],
   "projects": [
     {
-      "name": "Quantum Computing",
-      "summary": "Quantum computing is the use of quantum-mechanical phenomena such as superposition and entanglement to perform computation. Computers that perform quantum computations are known as quantum computers.",
-      "highlights": ["Quantum Teleportation", "Quantum Cryptography"],
-      "startDate": "2018-01-01",
-      "endDate": "2018-01-01",
+      "name": "Simple Matching Algorithm for League of Legends",
+      "summary": "Build an algorithm to simulate the rank game matching system in the League of Legends, applying mathematical optimization technique",
+      "highlights": ["Optimization", "Set Cover Problem"],
+      "startDate": "2025-01-24",
+      "endDate": "Ongoing",
       "url": "https://example.com"
     }
   ]
