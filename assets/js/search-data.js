@@ -48,15 +48,15 @@ ninja.data = [{
           window.location.href = "/blog/2024/Circulant-Matrix-and-Eigenvectors&values/";
         
       },
-    },{id: "post-a-brief-intro-to-spectral-graph-theory",
+    },{id: "post-laplacian-matrix-basic-properties",
       
-        title: "A Brief Intro to Spectral Graph Theory",
+        title: "Laplacian Matrix - Basic Properties",
       
       description: "",
       section: "Posts",
       handler: () => {
         
-          window.location.href = "/blog/2024/A-Brief-intro-to-Spectral-Graph-Theory/";
+          window.location.href = "/blog/2024/Laplacian-Matrix-(Basic-Properties)/";
         
       },
     },{id: "news-a-simple-inline-announcement",
