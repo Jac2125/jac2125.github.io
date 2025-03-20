@@ -1,16 +1,21 @@
 ---
 layout: post
-title: A Brief Intro to Spectral Graph Theory
+title: Laplacian Matrix - Basic Properties
 date: 2024-11-10 11:12:00-0400
 description: 
-tags: formatting math
+tags: Spectral_Graph_Theory
 categories: math
 related_posts: false
 ---
+This page is my study note of AN INTRODUCTION TO SPECTRAL GRAPH THEORY by Jiaqi Jiang
 
-# 3.1 Basic Properties of the Laplacian Matrix
+From Wikipedia, it introduces the spectral theory as the following:
+In mathematics, spectral theory is an inclusive term for theories extending the eigenvector and eigenvalue theory of a single square matrix to a much broader theory of the structure of operators in a variety of mathematical spaces.
 
-## Definition 3.1
+Then Spectral Graph Theory is a study of Eigenvalues/Eigenvectors of Graph. It deals with matrix representations of graphs, such as Laplacian and Adjacency Matrix. In this page, I wrote some cool properties of Laplacian Matrix and will write further study note about it.
+Alright, before we hit the definition of Laplacian Matrix, here is the definition of $$L_{G_{\{u,v\}}}$$.
+
+## Definition 1
 
 Suppose $$G = (V, E)$$ is a graph with $$V = \{1, 2, \dots, n\}$$. For an edge $$\{u, v\} \in E$$, we define an $$n \times n$$ matrix $$L_{G_{\{u,v\}}}$$ by
 
@@ -23,7 +28,12 @@ l_{G_{(u,v)}}(i,j) =
 \end{cases}
 $$
 
-## Definition 3.2
+The matrix $$L_{G_{\{u,v\}}}$$ has a cool propertie:
+$$
+\vec{x}^T L_{G_{\{u,v\}}} \vec{x} = (x_u - x_v)^2
+$$
+for all $$\vec{x} \in \mathbb{R}^n$$
+## Definition 2
 
 For a graph $$G = (V, E)$$, the Laplacian matrix $$L_G$$ is defined as:
 
