@@ -28,11 +28,13 @@ l_{G_{(u,v)}}(i,j) =
 \end{cases}
 $$
 
-The matrix $$L_{G_{\{u,v\}}}$$ has a cool propertie:
+The matrix $$L_{G_{\{u,v\}}}$$ has cool properties:
 $$
 \vec{x}^T L_{G_{\{u,v\}}} \vec{x} = (x_u - x_v)^2
 $$
 for all $$\vec{x} \in \mathbb{R}^n$$
+
+Then let's define the laplacian matrix:
 ## Definition 2
 
 For a graph $$G = (V, E)$$, the Laplacian matrix $$L_G$$ is defined as:
@@ -41,8 +43,21 @@ $$
 L_G = \sum_{\{u, v\} \in E} L_{G_{\{u, v\}}}
 $$
 
-### Theorem 3.3
+Alternative definition:
+Let $$G = (V, E)$$ with $$n$$ vertices $$v_1, ... v_n$$, its Laplacian matrix $$L_{n\times n} is defined as 
+$$
+L_{i,j}:=
+\begin{cases*}
+\text{deg}(v_i) & \text{if } i=j, \\ 
+-1 & \text{if } i \neq j \and (v_i, v_j) \in E \\ 
+0 & \text{otherwise}
+\end{cases*}
+This is equivalent to $$L = D - A$$, where $$D$$ is the degree matrix, and $$A$$ is the graph's adjacency matrix.
 
+We can check that this matrix is a real-symmetric matrix, where all the entries are real and symmetric.
+Here is one good fact about a real-symmetric matrix
+
+## Theorem 1
 The eigenvalues of a self-adjoint matrix are all real.
 
 **Proof.** Suppose $$\lambda$$ is an eigenvalue of the self-adjoint matrix $$L$$ and $$v$$ is a nonzero eigenvector of $$\lambda$$. Then,
@@ -50,10 +65,24 @@ The eigenvalues of a self-adjoint matrix are all real.
 $$
 \begin{align*}
 \lambda \|v\|^2 &= \lambda \langle v, v \rangle \\
-&= \langle \lambda v, v \rangle
+&= \langle \lambda v, v \rangle \\
+&= \langle Lv, \rangle \\
+&= \langle v, Lv \rangle \\
+&= \langle v, \lambda v \rangle
+&= \bar{\lambda} \langle v, v \rangle
+&= \bar{\lambda} \|v\|^2
 \end{align*}
 $$
+Since $$\lambda = \bar{\lambda}$$, $$\lambda$$ is real.
 
+I just said "self-adjoint matrix".
+A self-disjoint matrix $$M \in \mathbb{F}^{n\times n}$$ is self-disjoint or Hemitian if the conjugate transpose is equal to the original matrix:
+$$
+M = M^*
+$$
+Since real-symmetric matrices are equal to its conjugate transpose, we can apply theorem number to this case as well.
+
+And then, this is the definition of positive-semidefinite matrix.
 ## Definition 3.4
 
 An $$n \times n$$ matrix $$M$$ is called positive-semidefinite if $$\underline{x}^{T} M \underline{x} \geq 0$$ for all $$\underline{x} \in \mathbb{R}^n$$.
