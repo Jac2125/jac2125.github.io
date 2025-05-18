@@ -37,7 +37,29 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{id: "post-circulant-matrix-eigenvectors-values",
+        },{id: "post-thoughtsoncrossproduct",
+      
+        title: "ThoughtsOnCrossProduct",
+      
+      description: "",
+      section: "Posts",
+      handler: () => {
+        
+          window.location.href = "/blog/2025/Thoughts-on-Cross-Product/";
+        
+      },
+    },{id: "post-tsp-s",
+      
+        title: "TSP(s)",
+      
+      description: "",
+      section: "Posts",
+      handler: () => {
+        
+          window.location.href = "/blog/2025/TSP-Problems/";
+        
+      },
+    },{id: "post-circulant-matrix-eigenvectors-values",
       
         title: "Circulant Matrix + Eigenvectors/values",
       
