@@ -5,7 +5,7 @@ date: 2025-05-29
 description:
 tags: math optimization
 categories: math Knapsack
-related\_posts: false
+related_posts: false
 ---
 
 # Knapsack Problem - Intro
