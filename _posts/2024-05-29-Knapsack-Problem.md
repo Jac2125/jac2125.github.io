@@ -1,5 +1,4 @@
 ---
-
 layout: post
 title: KnapsackProblem
 date: 2025-05-29
@@ -7,7 +6,7 @@ description:
 tags: math optimization
 categories: math Knapsack
 related\_posts: false
----------------------
+---
 
 # Knapsack Problem - Intro
 
