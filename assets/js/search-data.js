@@ -37,7 +37,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{id: "post-thoughtsoncrossproduct",
+        },{id: "post-knapsackproblem",
+      
+        title: "KnapsackProblem",
+      
+      description: "",
+      section: "Posts",
+      handler: () => {
+        
+          window.location.href = "/blog/2025/Knapsack-Problem/";
+        
+      },
+    },{id: "post-thoughtsoncrossproduct",
       
         title: "ThoughtsOnCrossProduct",
       
