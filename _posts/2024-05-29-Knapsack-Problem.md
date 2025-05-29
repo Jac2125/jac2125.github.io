@@ -139,3 +139,14 @@ O\Bigl(\tfrac{n^2}{\varepsilon}\Bigr)
 $$
 
 depending on how the DP is structured.
+
+I have made a Knapsack Calculator here: 
+<iframe
+  src="{{ site.baseurl }}/assets/webProject/Knapsack/index.html"
+  width="100%"
+  height="600"
+  style="border:1px solid #ccc; border-radius:4px;"
+  sandbox="allow-scripts allow-same-origin"
+>
+  당신의 브라우저가 iframe을 지원하지 않습니다.
+</iframe>
