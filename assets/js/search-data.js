@@ -37,18 +37,7 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{id: "post-knapsackproblem",
-      
-        title: "KnapsackProblem",
-      
-      description: "",
-      section: "Posts",
-      handler: () => {
-        
-          window.location.href = "/blog/2025/Knapsack-Problem/";
-        
-      },
-    },{id: "post-thoughtsoncrossproduct",
+        },{id: "post-thoughtsoncrossproduct",
       
         title: "ThoughtsOnCrossProduct",
       
@@ -90,6 +79,17 @@ ninja.data = [{
       handler: () => {
         
           window.location.href = "/blog/2024/Laplacian-Matrix-(Basic-Properties)/";
+        
+      },
+    },{id: "post-knapsack-problem",
+      
+        title: "Knapsack Problem",
+      
+      description: "",
+      section: "Posts",
+      handler: () => {
+        
+          window.location.href = "/blog/2024/Knapsack-Problem/";
         
       },
     },{id: "news-a-simple-inline-announcement",
