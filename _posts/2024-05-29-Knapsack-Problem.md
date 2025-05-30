@@ -27,14 +27,14 @@ Well, from **Combinatorial Optimization** by Bernhard Korte & Jens Vygen, the bo
 A traveler with a knapsack comes across a treasure hoard. Unfortunately, his knapsack can hold only so much. What items should he place in his knapsack in order to maximize the value of the items he takes away?
 
 **Problem Definition**
-Given a set of $n$ items
-$I = \{1,2,\dots,n\},$
-where each item $i\in I$ has
+Given a set of $$n$$ items
+$$I = \{1,2,\dots,n\},$$
+where each item $$i\in I$$ has
 
-* weight $w_i > 0$
-* value $v_i > 0$
+* weight $$w_i > 0$$
+* value $$v_i > 0$$
 
-and given a knapsack capacity $W > 0$, find a subset $S \subseteq I$ such that
+and given a knapsack capacity $$W > 0$$, find a subset $$S \subseteq I$$ such that
 
 $$
 \sum_{i \in S} w_i \;\le\; W
@@ -64,7 +64,7 @@ $$
 f(0,w) = 0 \quad\forall\,0\le w\le B.
 $$
 
-Then for $i=1,\dots,n$ and $0\le w\le B$:
+Then for $$i=1,\dots,n$$ and $$0\le w\le B$$:
 
 $$
 f(i,w) = 
@@ -74,7 +74,7 @@ f(i-1,w), & w_i > w,\\
 \end{cases}
 $$
 
-The optimal value is $f(n,B)$.
+The optimal value is $$f(n,B)$$.
 This runs in
 
 $$
@@ -103,7 +103,7 @@ $$
 
 To obtain a Fully Polynomial-Time Approximation Scheme (FPTAS), proceed as follows:
 
-1. Let $v_{\max} = \max_i v_i$ and choose
+1. Let $$v_{\max} = \max_i v_i$$ and choose
 
    $$
    K = \frac{\varepsilon\,v_{\max}}{n}.
@@ -113,8 +113,8 @@ To obtain a Fully Polynomial-Time Approximation Scheme (FPTAS), proceed as follo
    $$
    v_i' = \left\lfloor \frac{v_i}{K} \right\rfloor \quad\forall i.
    $$
-3. Run the value-based DP on $v_i'$ instead of $v_i$.
-   This produces a solution whose total original value is at least $(1-\varepsilon)$ times optimum.
+3. Run the value-based DP on $$v_i'$$ instead of $$v_i$$.
+   This produces a solution whose total original value is at least $$(1-\varepsilon)$$ times optimum.
 
 The running time is
 
