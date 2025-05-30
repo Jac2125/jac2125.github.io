@@ -55,7 +55,7 @@ void approxKnapsackFPTAS(
     vector<int> sval(n);
     for (int i = 0; i < n; ++i)
         sval[i] = static_cast<int>(floor(val[i] / K));
-    int S = accumulate(sval.begin(), sval.end(), 0);
+    /*int S = accumulate(sval.begin(), sval.end(), 0);
 
     vector<int> dp(S + 1, INF), parentVal(S + 1, -1), parentItem(S + 1, -1);
     dp[0] = 0;
@@ -83,7 +83,12 @@ void approxKnapsackFPTAS(
 
     result = 0;
     for (int idx : sel)
+        result += val[idx];*/
+    exactKnapsack2D(sval, val, W, result, sel);
+    result = 0;
+    for(int& idx : sel) {
         result += val[idx];
+    }
 }
 
 // ── C-호환 래퍼 + 시간 측정 ─────────────────────────────────────
