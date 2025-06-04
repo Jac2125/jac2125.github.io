@@ -108,6 +108,11 @@ ninja.data = [{
           description: "with background image",
           section: "Projects",handler: () => {
               window.location.href = "/projects/1_project/";
+            },},{id: "projects-efm32gg990-with-hc-sr04",
+          title: 'EFM32GG990 with HC-SR04',
+          description: "with background image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/EFM3GG990-HC-SR04/";
             },},{
         id: 'social-email',
         title: 'email',
