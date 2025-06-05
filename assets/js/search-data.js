@@ -113,6 +113,11 @@ ninja.data = [{
           description: "with background image",
           section: "Projects",handler: () => {
               window.location.href = "/projects/EFM3GG990-HC-SR04/";
+            },},{id: "projects-efm32gg990-hc-sr04-with-tty-on-vbox",
+          title: 'EFM32GG990 HC SR04 with TTY on VBox',
+          description: "with background image",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/efm32_uart_logger_alfolio/";
             },},{
         id: 'social-email',
         title: 'email',
