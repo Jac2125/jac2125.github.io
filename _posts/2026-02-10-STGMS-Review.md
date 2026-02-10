@@ -3,10 +3,11 @@ layout: post
 title: "Navigating the City with Math: From Navy Waves to Traffic Waves"
 date: 2026-02-09
 tags: [GNN, Traffic Prediction, Spectral Graph Theory, STGMS, Research]
-categories: [math, review]
+categories: [review, math]
 description: "A deep dive into STGMS and Spectral Graph Theory, connecting naval experiences to urban traffic flow."
 ---
 
+<link rel="stylesheet" type="text/css" href="https://tikzjax.com/v1/fonts.css">
 <script src="https://tikzjax.com/v1/tikzjax.js"></script>
 
 <style>
@@ -32,12 +33,11 @@ Today, I want to introduce the **Spatio-Temporal Graph Neural Network with Multi
 #### Definition
 Let $$G = (V, E)$$be a simple undirected graph. The Laplacian matrix$$L$$ is defined as:
 $$L = D - A$$
-where $$D$$is the degree matrix (diagonal) and$$A$$ is the adjacency matrix. Consider a simple graph forming a "triangle" ($$K_3$$):
+where $$D$$is the degree matrix (diagonal) and $$A$$ is the adjacency matrix. Consider a simple graph forming a "triangle" ($$K_3$$):
 
-<div style="text-align: center; margin: 2rem 0;">
+<div style="text-align: center; margin: 2rem 0; overflow: visible;">
 <script type="text/tikz">
-  \begin{tikzpicture}
-    [node distance={30mm}, thick, main/.style = {draw, circle}]
+  \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}]
     \node[main] (1) {1};
     \node[main] (2) [right of=1] {2};
     \node[main] (3) [above right of=1, xshift=-8mm] {3};
@@ -64,9 +64,9 @@ If this value is small, the signal $$\mathbf{x}$$ changes smoothly across the gr
 
 <div class="nuance-box">
   <strong>Mathematical Nuance: The Symmetry Requirement</strong><br><br>
-  There is a subtle mathematical contradiction here. Real-world traffic is <strong>directed</strong> (e.g., one-way streets, different flows for AM/PM). However, the definition $$L = D - A$$ typically assumes an <strong>undirected</strong> graph ($$A$$ is symmetric).<br><br>
+  There is a subtle mathematical contradiction here. Real-world traffic is <strong>directed</strong> (e.g., one-way streets, different flows for AM/PM). However, the definition $L = D - A$ typically assumes an <strong>undirected</strong> graph ($A$ is symmetric).<br><br>
   <strong>Why?</strong> The <em>Spectral Theorem</em> guarantees that a matrix has an orthonormal basis of eigenvectors (crucial for the Graph Fourier Transform) if and only if the matrix is symmetric. If we used a directed graph's Laplacian, the eigenvalues could be complex numbers, breaking the physical interpretation of "frequencies."<br><br>
-  <strong>The Compromise:</strong> Therefore, models like STGMS often symmetrize the graph ($$A_{sym} = A + A^T$$) or use distance-based Gaussian kernels to ensure mathematical stability, effectively treating the road network as a "proximity map" rather than a flow map.
+  <strong>The Compromise:</strong> Therefore, models like STGMS often symmetrize the graph ($A_{sym} = A + A^T$) or use distance-based Gaussian kernels to ensure mathematical stability, effectively treating the road network as a "proximity map" rather than a flow map.
 </div>
 
 ### 2) The Spectral Bridge: From Fourier to Graph Convolution
@@ -83,14 +83,14 @@ Here, $$\Lambda$$ is the diagonal matrix of eigenvalues (frequencies).
 The formula above is mathematically elegant, but computationally expensive. To perform the eigendecomposition $$L = U \Lambda U^T$$, we need **$$O(N^3)$$** operations.
 
 <div class="highlight-box">
-  <strong>The Problem:</strong> For a city-wide traffic network with thousands of nodes ($$N$$), calculating $$U$$and$$U^T$$at every step is impossible for real-time prediction. We need a way to apply the filter$$g_\theta(\Lambda)$$without actually finding the eigenvectors$$U$$.
+  <strong>The Problem:</strong> For a city-wide traffic network with thousands of nodes ($N$), calculating $U$ and $U^T$ at every step is impossible for real-time prediction. We need a way to apply the filter $g_\theta(\Lambda)$ without actually finding the eigenvectors $U$.
 </div>
 
 ### The Polynomial Shortcut
-This is where polynomial approximation saves the day. If we approximate the filter function $$g_\theta(\Lambda)$$as a polynomial of eigenvalues, say$$P(\Lambda) = \sum_{k=0}^K \theta_k \Lambda^k$$, a beautiful property of linear algebra emerges:
+This is where polynomial approximation saves the day. If we approximate the filter function $$g_\theta(\Lambda)$$as a polynomial of eigenvalues, say $$P(\Lambda) = \sum_{k=0}^K \theta_k \Lambda^k$$, a beautiful property of linear algebra emerges:
 $$U P(\Lambda) U^T = P( U \Lambda U^T ) = P(L)$$
 
-Suddenly, we don't need the eigenvectors $$U$$anymore! We only need to compute powers of the Laplacian matrix$$L^k$$. STGMS specifically uses **Chebyshev polynomials** for this approximation because they are orthogonal and numerically stable.
+Suddenly, we don't need the eigenvectors $$U$$ anymore! We only need to compute powers of the Laplacian matrix $$L^k$$. STGMS specifically uses **Chebyshev polynomials** for this approximation because they are orthogonal and numerically stable.
 
 According to the STGMS model configuration, the recurrence relation is defined as:
 $$Ch_i(L_G) = 2 L_G Ch_{i-1}(L_G) - Ch_{i-2}(L_G)$$
@@ -99,9 +99,9 @@ with initial conditions:
 $$Ch_1(L_G) = L_G, \quad Ch_0(L_G) = 0$$
 
 <div class="math-note">
-  <strong>Professor's Observation: The $$Ch_0=0$$ Assumption</strong><br>
-  In standard Approximation Theory, the 0-th order Chebyshev polynomial is typically $$T_0(x) = 1$$(Identity Matrix). However, STGMS defines it as$$0$$.<br><br>
-  <strong>Why?</strong> This is likely an architectural design choice for Deep Learning. STGMS employs <strong>Residual Connections</strong> ($$y = F(x) + x$$). Since the residual connection already adds the input $$x$$(effectively$$1 \cdot x$$) to the output, including an Identity term in the convolution ($$Ch_0$$) would be redundant. Setting $$Ch_0=0$$ forces the GCN layer to learn "pure diffusion" (changes based on neighbors) while the residual path handles information preservation.
+  <strong>Observation: The $Ch_0=0$ Assumption</strong><br>
+  In standard Approximation Theory, the 0-th order Chebyshev polynomial is typically $T_0(x) = 1$(Identity Matrix). However, STGMS defines it as $0$.<br><br>
+  <strong>Why?</strong> This is likely an architectural design choice for Deep Learning. STGMS employs <strong>Residual Connections</strong> ($y = F(x) + x$). Since the residual connection already adds the input $x$ (effectively$1 \cdot x$) to the output, including an Identity term in the convolution ($Ch_0$) would be redundant. Setting $Ch_0=0$ forces the GCN layer to learn "pure diffusion" (changes based on neighbors) while the residual path handles information preservation.
 </div>
 
 ## 4. STGMS Deep Dive: The Recipe for Prediction
@@ -128,8 +128,8 @@ This handles the physical propagation of traffic. By using the polynomial approx
 
 <div class="critical-box">
   <strong>The "Over-smoothing" Problem</strong><br><br>
-  Mathematically, as $$K$$increases (multiplying$$L$$ many times), the node features in a GNN tend to converge to a stationary distribution. This is known as <strong>Over-smoothing</strong>.<br><br>
-  If $$K$$is too large, the unique signal of each intersection is washed out, and every node starts looking the same. This is why models typically limit$$K$$(e.g.,$$K=3$$)—it captures the local neighborhood without destroying the distinct identity of the nodes.
+  Mathematically, as $K$ increases (multiplying $L$ many times), the node features in a GNN tend to converge to a stationary distribution. This is known as <strong>Over-smoothing</strong>.<br><br>
+  If $K$ is too large, the unique signal of each intersection is washed out, and every node starts looking the same. This is why models typically limit $K$(e.g.,$K=3$)—it captures the local neighborhood without destroying the distinct identity of the nodes.
 </div>
 
 ## 5. Future Work: From Flow to Intention
@@ -146,15 +146,15 @@ Therefore, I propose a new direction: learning the **Latent Destination Distribu
 
 <div class="proposal-box">
   <h4>Proposal: Dynamic Intention Graph Learning</h4>
-  <p>Instead of a static adjacency matrix $$A$$, we introduce a time-varying <strong>Intention Graph $$A^{(t)}_{intent}$$</strong>:</p>
-  $$A^{(t)}_{final} = A_{topo} + \alpha \cdot A^{(t)}_{intent}$$
-  <p>Here, $$A^{(t)}_{intent}$$ connects nodes based on current travel demands (OD patterns), not just physical proximity.</p>
+  <p>Instead of a static adjacency matrix $A$, we introduce a time-varying <strong>Intention Graph $A^{(t)}_{intent}$</strong>:</p>
+  $A^{(t)}_{final} = A_{topo} + \alpha \cdot A^{(t)}_{intent}$
+  <p>Here, $A^{(t)}_{intent}$ connects nodes based on current travel demands (OD patterns), not just physical proximity.</p>
 </div>
 
 <div class="nuance-box">
-  <strong>Professor's Note: A Mathematical Challenge</strong><br><br>
-  <strong>The Spectral Dilemma:</strong> Introducing a dynamic $$A^{(t)}_{intent}$$ poses a fascinating mathematical challenge.<br><br>
-  If $$A^{(t)}_{intent}$$represents "intention to move from A to B," it is inherently <strong>asymmetric</strong>. As we discussed in Section 2, the Laplacian of an asymmetric matrix may yield <strong>complex eigenvalues</strong>. This breaks the foundation of the Chebyshev approximation, which relies on eigenvalues being real and bounded within$$[-1, 1]$$.<br><br>
+  <strong>Note: A Mathematical Challenge</strong><br><br>
+  <strong>The Spectral Dilemma:</strong> Introducing a dynamic $A^{(t)}_{intent}$ poses a fascinating mathematical challenge.<br><br>
+  If $A^{(t)}_{intent}$ represents "intention to move from A to B," it is inherently <strong>asymmetric</strong>. As we discussed in Section 2, the Laplacian of an asymmetric matrix may yield <strong>complex eigenvalues</strong>. This breaks the foundation of the Chebyshev approximation, which relies on eigenvalues being real and bounded within $[-1, 1]$.<br><br>
   <strong>The Solution?</strong> To implement this "Intention Graph," we would likely need to abandon Spectral GCNs (ChebNet) and adopt <strong>Spatial GNNs</strong> (like Graph Attention Networks or Message Passing Neural Networks). Spatial methods operate directly on the graph structure without relying on the eigendecomposition of the Laplacian, making them robust to the asymmetry of human intention.
 </div>
 
