@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graph Laplacian Explorer</title>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel (for JSX) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        body { margin: 0; overflow: hidden; }
+        
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useRef, useEffect, useMemo } = React;
+
+        // --- Icons ---
+        const Plus = ({ size = 20 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>;
+        const Trash2 = ({ size = 20 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>;
+        const LinkIcon = ({ size = 20 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>;
+        const RefreshCw = ({ size = 20 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>;
+        const AlertCircle = ({ size = 20 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>;
+        const Sparkles = ({ size = 20 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path></svg>;
+        const XIcon = ({ size = 20 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>;
+        const Loader2 = ({ size = 20 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>;
+        const MousePointer2 = ({ size = 20 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 21.054-2.868-6.692-6.692-2.868 18.06-8.034-8.5 17.594Z"></path></svg>;
+        const Calculator = ({ size = 20 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M8 10h.01"></path><path d="M12 14h.01"></path><path d="M8 14h.01"></path><path d="M12 18h.01"></path><path d="M8 18h.01"></path></svg>;
+        const Activity = ({ size = 20 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>;
+        const PlayCircle = ({ size = 20 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>;
+        const MagicWand = ({ size = 20 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m19 2 2 2-2 2-2-2 2-2Z"></path><path d="m5 7 2 2-2 2-2-2 2-2Z"></path><path d="m15 11 5 5-5 5-5-5 5-5Z"></path><path d="m19 15-7-7-7 7"></path></svg>;
+        const Droplet = ({ size = 20 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>;
+
+        // --- Linear Algebra Utils ---
+        function computeEigenDecomposition(matrix) {
+            const n = matrix.length;
+            if (n === 0) return { eigenvalues: [], eigenvectors: [] };
+            
+            let A = matrix.map(row => [...row]);
+            let V = Array(n).fill(null).map((_, i) => Array(n).fill(null).map((_, j) => (i === j ? 1 : 0)));
+            const maxIter = 100;
+            const tolerance = 1e-10;
+
+            for (let iter = 0; iter < maxIter; iter++) {
+                let maxVal = 0;
+                let p = 0, q = 0;
+                for (let i = 0; i < n - 1; i++) {
+                    for (let j = i + 1; j < n; j++) {
+                        if (Math.abs(A[i][j]) >= maxVal) {
+                            maxVal = Math.abs(A[i][j]);
+                            p = i;
+                            q = j;
+                        }
+                    }
+                }
+                if (maxVal < tolerance) break;
+                const App = A[p][p], Aqq = A[q][q], Apq = A[p][q];
+                let theta = 0;
+                if (Math.abs(Apq) > 0) {
+                    const tau = (Aqq - App) / (2 * Apq);
+                    theta = tau >= 0 ? Math.atan(1 / (tau + Math.sqrt(1 + tau * tau))) : Math.atan(1 / (tau - Math.sqrt(1 + tau * tau)));
+                }
+                const c = Math.cos(theta), s = Math.sin(theta);
+                A[p][p] = c * c * App - 2 * s * c * Apq + s * s * Aqq;
+                A[q][q] = s * s * App + 2 * s * c * Apq + c * c * Aqq;
+                A[p][q] = 0; A[q][p] = 0;
+                for (let i = 0; i < n; i++) {
+                    if (i !== p && i !== q) {
+                        const Aip = A[i][p], Aiq = A[i][q];
+                        A[i][p] = c * Aip - s * Aiq; A[p][i] = A[i][p];
+                        A[i][q] = s * Aip + c * Aiq; A[q][i] = A[i][q];
+                    }
+                }
+                for (let i = 0; i < n; i++) {
+                    const Vip = V[i][p], Viq = V[i][q];
+                    V[i][p] = c * Vip - s * Viq;
+                    V[i][q] = s * Vip + c * Viq;
+                }
+            }
+            const results = [];
+            for (let i = 0; i < n; i++) {
+                const vector = [];
+                for (let j = 0; j < n; j++) vector.push(V[j][i]);
+                results.push({ value: A[i][i], vector: vector });
+            }
+            results.sort((a, b) => a.value - b.value);
+            return results;
+        }
+
+        // --- Main App ---
+        const GraphLaplacianExplorer = () => {
+            const [nodes, setNodes] = useState([]);
+            const [edges, setEdges] = useState([]);
+            const [mode, setMode] = useState('addNode'); 
+            const [selectedNodeId, setSelectedNodeId] = useState(null);
+            const [nodeValues, setNodeValues] = useState({});
+            const [activeTab, setActiveTab] = useState('matrix');
+            const [draggingNodeId, setDraggingNodeId] = useState(null);
+            const [statusMsg, setStatusMsg] = useState('');
+            const [showAnalysis, setShowAnalysis] = useState(false);
+            const [isAnalyzing, setIsAnalyzing] = useState(false);
+            const [analysisResult, setAnalysisResult] = useState("");
+            const svgRef = useRef(null);
+
+            // Graph & Math Logic
+            const edgeExists = (sourceId, targetId) => edges.some(e => (e.source === sourceId && e.target === targetId) || (e.source === targetId && e.target === sourceId));
+            
+            const calculateLaplacian = useMemo(() => {
+                const n = nodes.length;
+                if (n === 0) return [];
+                let matrix = Array(n).fill(null).map(() => Array(n).fill(0));
+                edges.forEach(edge => {
+                    const u = nodes.findIndex(n => n.id === edge.source);
+                    const v = nodes.findIndex(n => n.id === edge.target);
+                    if (u !== -1 && v !== -1) {
+                        matrix[u][v] = -1; matrix[v][u] = -1;
+                    }
+                });
+                for (let i = 0; i < n; i++) {
+                    let degree = 0;
+                    for (let j = 0; j < n; j++) if (i !== j && matrix[i][j] === -1) degree++;
+                    matrix[i][i] = degree;
+                }
+                return matrix;
+            }, [nodes, edges]);
+
+            const eigenData = useMemo(() => computeEigenDecomposition(calculateLaplacian), [calculateLaplacian]);
+
+            const quadraticForm = useMemo(() => {
+                let sum = 0;
+                edges.forEach(edge => {
+                    const valU = parseFloat(nodeValues[edge.source]) || 0;
+                    const valV = parseFloat(nodeValues[edge.target]) || 0;
+                    sum += Math.pow(valU - valV, 2);
+                });
+                return sum;
+            }, [edges, nodeValues]);
+
+            // --- Features: Auto Layout & Smoothing ---
+
+            // 1. Spectral Layout (Auto-Align)
+            // Using Eigenvectors v2 and v3 to determine X, Y coordinates
+            const applySpectralLayout = () => {
+                if (nodes.length < 3) {
+                    setStatusMsg("노드가 3개 이상일 때 사용할 수 있습니다.");
+                    return;
+                }
+                
+                // v2 (Fiedler vector) for X, v3 for Y
+                const vecX = eigenData[1]?.vector; 
+                const vecY = eigenData[2]?.vector;
+
+                if (!vecX || !vecY) return;
+
+                const svg = svgRef.current;
+                const width = svg.clientWidth;
+                const height = svg.clientHeight;
+                const padding = 50;
+
+                // Normalize helper
+                const normalize = (val, min, max, dimension) => {
+                    return padding + ((val - min) / (max - min)) * (dimension - 2 * padding);
+                };
+
+                const minX = Math.min(...vecX);
+                const maxX = Math.max(...vecX);
+                const minY = Math.min(...vecY);
+                const maxY = Math.max(...vecY);
+
+                const newNodes = nodes.map((node, i) => ({
+                    ...node,
+                    x: normalize(vecX[i], minX, maxX, width),
+                    y: normalize(vecY[i], minY, maxY, height)
+                }));
+
+                setNodes(newNodes);
+                setStatusMsg("스펙트럼 레이아웃(고유벡터 기반 자동 정렬) 적용 완료! 🪄");
+            };
+
+            // 2. Heat Diffusion (Smoothing)
+            // x_new = x_old - alpha * L * x_old (Gradient Descent on Energy)
+            const applySmoothing = () => {
+                const alpha = 0.2; // Learning rate / Diffusion rate
+                const n = nodes.length;
+                
+                // Current values vector
+                const x = nodes.map(node => parseFloat(nodeValues[node.id]) || 0);
+                
+                // Compute L * x
+                const Lx = Array(n).fill(0);
+                for(let i=0; i<n; i++) {
+                    for(let j=0; j<n; j++) {
+                        Lx[i] += calculateLaplacian[i][j] * x[j];
+                    }
+                }
+
+                // Update x
+                const newValuesMap = {};
+                nodes.forEach((node, i) => {
+                    const newVal = x[i] - alpha * Lx[i];
+                    newValuesMap[node.id] = newVal.toFixed(2);
+                });
+
+                setNodeValues(newValuesMap);
+                setActiveTab('calc');
+                setStatusMsg("값 스무딩(확산) 완료! 에너지가 낮아졌습니다. 💧");
+            };
+
+
+            // --- API ---
+            const callGeminiAPI = async (prompt) => {
+                const apiKey = ""; 
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+                try {
+                    const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }) });
+                    if (!response.ok) throw new Error(`HTTP error! ${response.status}`);
+                    const data = await response.json();
+                    return data.candidates?.[0]?.content?.parts?.[0]?.text || "분석 실패";
+                } catch (error) { return "AI 분석 오류."; }
+            };
+
+            const handleAnalyzeGraph = async () => {
+                if (nodes.length === 0) { setAnalysisResult("노드 없음!"); setShowAnalysis(true); return; }
+                setIsAnalyzing(true); setShowAnalysis(true); setAnalysisResult("");
+                const edgeDesc = edges.map(e => `(${nodes.find(n=>n.id===e.source)?.label}-${nodes.find(n=>n.id===e.target)?.label})`).join(", ");
+                const eigStr = eigenData.map(d => d.value.toFixed(2)).join(", ");
+                const valStr = nodes.map(n => `N${n.label}:${parseFloat(nodeValues[n.id])||0}`).join(", ");
+                const prompt = `그래프 분석가 모드. 데이터: 노드${nodes.length}개, 엣지${edgeDesc}, 고윳값[${eigStr}], 값${valStr}, 에너지${quadraticForm}. 1.구조 2.고윳값의미 3.에너지해석 4.현실비유 (Markdown)`;
+                const result = await callGeminiAPI(prompt);
+                setAnalysisResult(result); setIsAnalyzing(false);
+            };
+
+            // --- Interaction ---
+            const getPos = (e) => { const r = svgRef.current.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+            const handleDown = (e, id = null) => {
+                if (id !== null) { e.stopPropagation(); if (mode === 'move') { setDraggingNodeId(id); e.target.setPointerCapture(e.pointerId); setStatusMsg('이동 중...'); } else handleNodeClick(id); }
+                else if (mode === 'addNode') { const { x, y } = getPos(e); const id = Date.now(); setNodes([...nodes, { id, label: nodes.length, x, y }]); setNodeValues(p => ({ ...p, [id]: "0" })); setStatusMsg('노드 추가됨'); }
+                else if (mode === 'addEdge' && selectedNodeId) { setSelectedNodeId(null); setStatusMsg('선택 취소'); }
+            };
+            const handleMove = (e) => { if (mode === 'move' && draggingNodeId) { e.preventDefault(); const { x, y } = getPos(e); setNodes(p => p.map(n => n.id === draggingNodeId ? { ...n, x, y } : n)); } };
+            const handleUp = () => { if (draggingNodeId) { setDraggingNodeId(null); setStatusMsg(''); } };
+            const handleNodeClick = (id) => {
+                const node = nodes.find(n => n.id === id);
+                if (mode === 'delete') {
+                    setNodes(nodes.filter(n => n.id !== id).map((n, i) => ({ ...n, label: i })));
+                    setEdges(edges.filter(e => e.source !== id && e.target !== id));
+                    const nv = { ...nodeValues }; delete nv[id]; setNodeValues(nv); setStatusMsg('삭제됨');
+                } else if (mode === 'addEdge') {
+                    if (!selectedNodeId) { setSelectedNodeId(id); setStatusMsg('연결할 타겟 클릭'); }
+                    else { if (selectedNodeId !== id) { if (!edgeExists(selectedNodeId, id)) setEdges([...edges, { source: selectedNodeId, target: id }]); else setStatusMsg('이미 연결됨'); } setSelectedNodeId(null); }
+                }
+            };
+
+            const applyEigenvector = (vec) => {
+                const max = Math.max(...vec.map(Math.abs)) || 1;
+                const nv = {}; nodes.forEach((n, i) => nv[n.id] = ((vec[i]/max)*5).toFixed(2));
+                setNodeValues(nv); setActiveTab('calc'); setStatusMsg('고유벡터 적용됨');
+            };
+            const getColor = (id) => {
+                const v = parseFloat(nodeValues[id]) || 0; const i = Math.min(Math.abs(v)/5, 1);
+                return v > 0 ? `rgba(255,${Math.round(255*(1-i))},${Math.round(255*(1-i))},1)` : v < 0 ? `rgba(${Math.round(255*(1-i))},${Math.round(255*(1-i))},255,1)` : '#fff';
+            };
+
+            return (
+                <div className="flex flex-col h-screen bg-slate-50 text-slate-800 font-sans relative select-none">
+                    <div className="p-3 bg-white shadow-sm z-10 border-b flex flex-col gap-3">
+                        <div className="flex justify-between items-center">
+                            <h1 className="text-lg font-bold flex items-center gap-2"><span className="bg-indigo-600 text-white px-2 rounded text-sm">Graph</span> Laplacian Explorer</h1>
+                            <div className="flex gap-2">
+                                <button onClick={handleAnalyzeGraph} className="flex items-center gap-1 px-3 py-1.5 text-xs bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white rounded hover:opacity-90"><Sparkles size={14}/> AI 분석</button>
+                                <button onClick={()=>{setNodes([]);setEdges([]);setNodeValues({});}} className="flex items-center gap-1 px-3 py-1.5 text-xs border rounded hover:bg-red-50 text-slate-500"><RefreshCw size={14}/> 초기화</button>
+                            </div>
+                        </div>
+                        <div className="flex flex-wrap gap-2 justify-between">
+                            <div className="flex bg-slate-100 p-1 rounded gap-1">
+                                {[['addNode', Plus, '노드'], ['move', MousePointer2, '이동'], ['addEdge', LinkIcon, '연결'], ['delete', Trash2, '삭제']].map(([m, I, l]) => (
+                                    <button key={m} onClick={() => {setMode(m); setSelectedNodeId(null);}} className={`flex items-center gap-1 px-3 py-1.5 rounded text-sm ${mode===m ? 'bg-white shadow text-indigo-600 font-bold' : 'text-slate-500 hover:text-slate-700'}`}><I size={16}/> {l}</button>
+                                ))}
+                            </div>
+                            <div className="flex bg-indigo-50 p-1 rounded gap-1 border border-indigo-100">
+                                <button onClick={applySpectralLayout} className="flex items-center gap-1 px-3 py-1.5 rounded text-sm bg-white text-indigo-600 shadow-sm hover:bg-indigo-50 transition-colors" title="고유벡터를 이용해 그래프 모양을 자동으로 잡습니다"><MagicWand size={16}/> 자동 정렬</button>
+                                <button onClick={applySmoothing} className="flex items-center gap-1 px-3 py-1.5 rounded text-sm bg-white text-blue-500 shadow-sm hover:bg-blue-50 transition-colors" title="값을 주변과 비슷하게 부드럽게 만듭니다 (열 확산)"><Droplet size={16}/> 스무딩</button>
+                            </div>
+                        </div>
+                        <div className={`text-xs px-2 py-1 rounded flex gap-1 ${mode==='addEdge'&&selectedNodeId?'bg-orange-100 text-orange-700':'bg-slate-100 text-slate-500'}`}><AlertCircle size={12}/> {statusMsg || '준비 완료'}</div>
+                    </div>
+
+                    <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
+                        <div className="flex-1 relative bg-slate-50">
+                            <svg ref={svgRef} className="w-full h-full touch-none"
+                                style={{cursor: mode==='addNode'?'crosshair':mode==='move'?'grab':'default'}}
+                                onPointerDown={(e)=>handleDown(e)} onPointerMove={handleMove} onPointerUp={handleUp} onPointerLeave={handleUp}>
+                                <defs><marker id="arrow" markerWidth="10" markerHeight="7" refX="20" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#94a3b8"/></marker></defs>
+                                {edges.map((e, i) => {
+                                    const s = nodes.find(n=>n.id===e.source), t = nodes.find(n=>n.id===e.target);
+                                    if(!s||!t) return null;
+                                    return <g key={i} onClick={(ev)=>{ev.stopPropagation(); if(mode==='delete'){const ne=[...edges];ne.splice(i,1);setEdges(ne);}}}>
+                                        <line x1={s.x} y1={s.y} x2={t.x} y2={t.y} stroke="transparent" strokeWidth="15" className={mode==='delete'?'cursor-pointer':''}/>
+                                        <line x1={s.x} y1={s.y} x2={t.x} y2={t.y} stroke={mode==='delete'?'#ef4444':'#cbd5e1'} strokeWidth="3"/>
+                                    </g>;
+                                })}
+                                {nodes.map((n, i) => {
+                                    const sel = selectedNodeId===n.id, val = nodeValues[n.id]!==undefined?nodeValues[n.id]:"0";
+                                    return <g key={n.id} transform={`translate(${n.x},${n.y})`} onPointerDown={(e)=>handleDown(e,n.id)} className="transition-transform duration-75">
+                                        <circle r="20" fill={getColor(n.id)} stroke={sel?'#f97316':mode==='delete'?'#ef4444':'#94a3b8'} strokeWidth={sel?4:2}/>
+                                        <text dy=".35em" textAnchor="middle" className={`text-xs font-bold pointer-events-none ${sel?'fill-orange-700':'fill-slate-600'}`}>{val}</text>
+                                        <text y="32" textAnchor="middle" className="text-[10px] fill-slate-400 font-mono">#{n.label}</text>
+                                    </g>;
+                                })}
+                            </svg>
+                            <div className="absolute bottom-4 left-4 text-xs text-slate-400 bg-white/80 px-2 py-1 rounded shadow-sm backdrop-blur">Nodes: {nodes.length} | Edges: {edges.length}</div>
+                        </div>
+
+                        <div className="h-1/3 md:h-auto md:w-80 bg-white border-l shadow-xl flex flex-col z-20">
+                            <div className="flex border-b">
+                                {[['matrix','행렬'],['calc','에너지'],['spectrum','주파수']].map(([k,l])=>(
+                                    <button key={k} onClick={()=>setActiveTab(k)} className={`flex-1 py-3 text-xs font-medium ${activeTab===k?'text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50':'text-slate-500 hover:bg-slate-50'}`}>{l}</button>
+                                ))}
+                            </div>
+                            <div className="flex-1 overflow-auto p-4 bg-slate-50/50">
+                                {nodes.length===0 ? <div className="text-center text-slate-400 text-xs mt-10">그래프를 그려주세요</div> : (
+                                    <>
+                                        {activeTab==='matrix' && <div className="flex justify-center"><div className="grid gap-1" style={{gridTemplateColumns:`repeat(${nodes.length},minmax(24px,1fr))`}}>{calculateLaplacian.map((r,i)=>r.map((v,j)=><div key={`${i}-${j}`} className={`w-7 h-7 flex items-center justify-center text-xs rounded ${v?'bg-indigo-100 text-indigo-700 font-bold':'text-slate-300'}`}>{v}</div>))}</div></div>}
+                                        {activeTab==='calc' && <div className="space-y-4">
+                                            <div className="bg-white p-4 rounded-xl border border-violet-100 text-center shadow-sm">
+                                                <div className="text-xs text-violet-400 font-bold uppercase tracking-wider">Total Energy</div>
+                                                <div className="text-3xl font-mono font-bold text-violet-600 my-1">{quadraticForm.toFixed(2)}</div>
+                                                <div className="text-[10px] text-slate-400">값이 작을수록 그래프가 '매끄럽습니다'</div>
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-2">
+                                                {nodes.map((n,i)=><div key={n.id} className="flex items-center bg-white border px-2 py-1 rounded"><span className="text-xs font-bold text-slate-400 w-6">#{i}</span><input type="number" className="w-full text-right text-sm outline-none" value={nodeValues[n.id]||""} onChange={(e)=>setNodeValues({...nodeValues,[n.id]:e.target.value})} placeholder="0"/></div>)}
+                                            </div>
+                                        </div>}
+                                        {activeTab==='spectrum' && <div className="space-y-4">
+                                            <div className="flex items-end h-24 gap-1 border-b pb-1 px-2">
+                                                {eigenData.map((d,i)=>{
+                                                    const h = Math.min((d.value/(Math.max(...eigenData.map(x=>x.value))||1))*100, 100);
+                                                    return <div key={i} className="flex-1 bg-emerald-400 hover:bg-emerald-500 relative group rounded-t" style={{height:`${Math.max(h,5)}%`}}><div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 bg-black text-white text-[10px] px-1 rounded mb-1">λ={d.value.toFixed(2)}</div></div>
+                                                })}
+                                            </div>
+                                            <div className="space-y-2">
+                                                {eigenData.map((d,i)=>(
+                                                    <div key={i} className="bg-white border rounded p-2 text-xs flex justify-between items-center shadow-sm">
+                                                        <span className="font-mono font-bold text-slate-600">λ<sub>{i}</sub> = {d.value.toFixed(2)}</span>
+                                                        <button onClick={()=>applyEigenvector(d.vector)} className="px-2 py-1 bg-slate-100 hover:bg-emerald-50 text-emerald-600 rounded flex items-center gap-1"><PlayCircle size={10}/> 적용</button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>}
+                                    </>
+                                )}
+                            </div>
+                        </div>
+
+                        {showAnalysis && <div className="absolute inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
+                            <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[80%] flex flex-col overflow-hidden">
+                                <div className="p-4 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white flex justify-between items-center"><h3 className="font-bold flex gap-2"><Sparkles size={16}/> AI 분석</h3><button onClick={()=>setShowAnalysis(false)} className="hover:bg-white/20 rounded p-1"><XIcon size={18}/></button></div>
+                                <div className="p-6 overflow-y-auto text-sm leading-relaxed">{isAnalyzing ? <div className="py-10 flex justify-center"><Loader2 size={32} className="animate-spin text-fuchsia-500"/></div> : <div dangerouslySetInnerHTML={{__html:analysisResult.replace(/\n/g,'<br/>').replace(/\*\*(.*?)\*\*/g,'<strong class="text-violet-600">$1</strong>')}}/>}</div>
+                            </div>
+                        </div>}
+                    </div>
+                </div>
+            );
+        };
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<GraphLaplacianExplorer />);
+    </script>
+</body>
+</html>
+
+
