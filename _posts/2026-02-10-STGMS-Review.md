@@ -26,8 +26,19 @@ window.MathJax = {
 .proposal-box { background-color: #f0fdf4; border-left: 4px solid #16a34a; padding: 1rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; color: #14532d; }
 .nuance-box { background-color: #fff7ed; border-left: 4px solid #f97316; padding: 1rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; color: #7c2d12; }
 .math-note { background-color: #fafafa; border: 1px solid #e5e7eb; padding: 1rem; border-radius: 0.5rem; color: #525252; margin-top: 1rem; font-size: 0.9em;}
-</style>
 
+/* 글자색 강제 적용 (다크모드 무시) */
+•highlight-box, .highlight-box * { color: #Oc4abe !important; }
+• critical-box,
+•critical-box *
+{ color: #881337 ! important; }
+• proposal-box,
+•proposal-box *
+{ color: #14532d !important; }
+• nuance-box, . nuance-box * { color:
+#7c2d12 ! important; }
+•math-note, •math-note * { color:
+#525252 ! important; } </ style>
 ## 1. Intro: From the Sea to the Streets
 
 I have been serving in the ROK Navy since June 2025. Sailing through the seas, my last seven months seem to have disappeared like the **wake behind the ship**, vanishing into the white foam. Now that I finally have some time to think about my future outside the military, I have found myself captivated by the problem of traffic prediction.
