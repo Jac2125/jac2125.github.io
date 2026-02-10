@@ -38,7 +38,7 @@ window.MathJax = {
 • nuance-box, . nuance-box * { color:
 #7c2d12 ! important; }
 •math-note, •math-note * { color:
-#525252 ! important; } </ style>
+#525252 ! important; } </style>
 ## 1. Intro: From the Sea to the Streets
 
 I have been serving in the ROK Navy since June 2025. Sailing through the seas, my last seven months seem to have disappeared like the **wake behind the ship**, vanishing into the white foam. Now that I finally have some time to think about my future outside the military, I have found myself captivated by the problem of traffic prediction.
