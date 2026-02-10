@@ -62,11 +62,11 @@ $$\mathbf{x}^T L \mathbf{x} = \sum_{(i,j) \in E} (x_i - x_j)^2$$
 
 If this value is small, the signal $$\mathbf{x}$$ changes smoothly across the graph—meaning neighbors have similar traffic conditions.
 
-<div class="nuance-box">
+<div class="nuance-box" markdown = 1>
   <strong>Mathematical Nuance: The Symmetry Requirement</strong><br><br>
-  There is a subtle mathematical contradiction here. Real-world traffic is <strong>directed</strong> (e.g., one-way streets, different flows for AM/PM). However, the definition $L = D - A$ typically assumes an <strong>undirected</strong> graph ($A$ is symmetric).<br><br>
+  There is a subtle mathematical contradiction here. Real-world traffic is <strong>directed</strong> (e.g., one-way streets, different flows for AM/PM). However, the definition $$L = D - A$$ typically assumes an <strong>undirected</strong> graph ($$A$$ is symmetric).<br><br>
   <strong>Why?</strong> The <em>Spectral Theorem</em> guarantees that a matrix has an orthonormal basis of eigenvectors (crucial for the Graph Fourier Transform) if and only if the matrix is symmetric. If we used a directed graph's Laplacian, the eigenvalues could be complex numbers, breaking the physical interpretation of "frequencies."<br><br>
-  <strong>The Compromise:</strong> Therefore, models like STGMS often symmetrize the graph ($A_{sym} = A + A^T$) or use distance-based Gaussian kernels to ensure mathematical stability, effectively treating the road network as a "proximity map" rather than a flow map.
+  <strong>The Compromise:</strong> Therefore, models like STGMS often symmetrize the graph ($$A_{sym} = A + A^T$$) or use distance-based Gaussian kernels to ensure mathematical stability, effectively treating the road network as a "proximity map" rather than a flow map.
 </div>
 
 ### 2) The Spectral Bridge: From Fourier to Graph Convolution
