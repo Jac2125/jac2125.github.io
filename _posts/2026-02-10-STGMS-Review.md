@@ -73,9 +73,9 @@ $$\mathbf{x}^T L \mathbf{x} = \sum_{(i,j) \in E} (x_i - x_j)^2$$
 If this value is small, the signal $$\mathbf{x}$$ changes smoothly across the graph—meaning neighbors have similar traffic conditions.
 
 <div style="width: 100%; margin: 2rem 0; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-  <iframe src="/assets/interactive/graph-laplacian.html" width="100%" height="700px" frameborder="0" loading="lazy" style="display: block;" title="Graph Laplacian Explorer"></iframe>
+  <iframe src="/assets/html/graph-laplacian.html" width="100%" height="700px" frameborder="0" loading="lazy" style="display: block;" title="Graph Laplacian Explorer"></iframe>
 </div>
-<p style="text-align: center; color: #666; font-size: 0.9em; margin-top: 0.5rem;"><em>Tip: 빈 공간을 클릭하여 노드를 추가하고, 드래그하여 연결해보세요.</em></p>
+<p style="text-align: center; color: #666; font-size: 0.9em; margin-top: 0.5rem;"><em>Tip: Click an empty spot to add nodes and connect them.</em></p>
 
 <div class="nuance-box" markdown="1">
   <strong>Mathematical Nuance: The Symmetry Requirement</strong><br><br>
