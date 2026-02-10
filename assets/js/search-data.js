@@ -37,7 +37,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{id: "post-knapsackproblem",
+        },{id: "post-navigating-the-city-with-math-from-navy-waves-to-traffic-waves",
+      
+        title: "Navigating the City with Math: From Navy Waves to Traffic Waves",
+      
+      description: "A deep dive into STGMS and Spectral Graph Theory, connecting naval experiences to urban traffic flow.",
+      section: "Posts",
+      handler: () => {
+        
+          window.location.href = "/blog/2026/STGMS-Review/";
+        
+      },
+    },{id: "post-knapsackproblem",
       
         title: "KnapsackProblem",
       
