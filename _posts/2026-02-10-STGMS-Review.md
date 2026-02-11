@@ -21,14 +21,61 @@ window.MathJax = {
 </script>
 
 <style>
-/* !important is added to 'color' to prevent Dark Mode from turning text white on these light backgrounds.
+/* The ' *' selector forces ALL children elements (p, strong, math, etc.) 
+   inside the box to use the dark color, overriding the theme's Dark Mode white text.
 */
-.highlight-box { background-color: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 1rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; color: #0c4a6e !important; }
-.critical-box { background-color: #fff1f2; border-left: 4px solid #e11d48; padding: 1rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; color: #881337 !important; }
-.proposal-box { background-color: #f0fdf4; border-left: 4px solid #16a34a; padding: 1rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; color: #14532d !important; }
-.nuance-box { background-color: #fff7ed; border-left: 4px solid #f97316; padding: 1rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; color: #7c2d12 !important; }
-.math-note { background-color: #fafafa; border: 1px solid #e5e7eb; padding: 1rem; border-radius: 0.5rem; color: #525252 !important; margin-top: 1rem; font-size: 0.9em;}
+.highlight-box, .highlight-box * { 
+    background-color: #f0f9ff; 
+    color: #0c4a6e !important; /* Force Dark Blue Text */
+}
+.highlight-box {
+    border-left: 4px solid #0ea5e9; 
+    padding: 1rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; 
+}
+
+.critical-box, .critical-box * { 
+    background-color: #fff1f2; 
+    color: #881337 !important; /* Force Dark Red Text */
+}
+.critical-box {
+    border-left: 4px solid #e11d48; 
+    padding: 1rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; 
+}
+
+.proposal-box, .proposal-box * { 
+    background-color: #f0fdf4; 
+    color: #14532d !important; /* Force Dark Green Text */
+}
+.proposal-box {
+    border-left: 4px solid #16a34a; 
+    padding: 1rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; 
+}
+
+.nuance-box, .nuance-box * { 
+    background-color: #fff7ed; 
+    color: #7c2d12 !important; /* Force Dark Orange Text */
+}
+.nuance-box {
+    border-left: 4px solid #f97316; 
+    padding: 1rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; 
+}
+
+.math-note, .math-note * { 
+    background-color: #fafafa; 
+    color: #525252 !important; /* Force Dark Gray Text */
+}
+.math-note {
+    border: 1px solid #e5e7eb; 
+    padding: 1rem; border-radius: 0.5rem; margin-top: 1rem; font-size: 0.9em;
+}
+
+/* Ensure SVG fills in MathJax also follow the color */
+.highlight-box svg path { fill: #0c4a6e !important; }
+.critical-box svg path { fill: #881337 !important; }
+.proposal-box svg path { fill: #14532d !important; }
+.nuance-box svg path { fill: #7c2d12 !important; }
 </style>
+
 ## 1. Intro: From the Sea to the Streets
 
 I have been serving in the ROK Navy since June 2025. Sailing through the seas, my last seven months seem to have disappeared like the **wake behind the ship**, vanishing into the white foam. Now that I finally have some time to think about my future outside the military, I have found myself captivated by the problem of traffic prediction.
