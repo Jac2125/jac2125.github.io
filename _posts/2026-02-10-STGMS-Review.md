@@ -93,19 +93,35 @@ Let $$G = (V, E)$$be a simple undirected graph. The Laplacian matrix$$L$$ is def
 $$L = D - A$$
 where $$D$$is the degree matrix (diagonal) and$$A$$ is the adjacency matrix. Consider a simple graph forming a "triangle" ($$K_3$$):
 
+<link rel="stylesheet" type="text/css" href="https://tikzjax.com/v1/fonts.css">
+<script src="https://tikzjax.com/v1/tikzjax.js"></script>
+
 <div style="text-align: center; margin: 2rem 0; overflow: visible;">
-<script type="text/tikz">
-  \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}]
-    \node[main] (1) {1};
-    \node[main] (2) [right of=1] {2};
-    \node[main] (3) [above right of=1, xshift=-8mm] {3};
-    \draw (1) -- (2);
-    \draw (2) -- (3);
-    \draw (3) -- (1);
-  \end{tikzpicture}
-</script>
-<p style="font-style: italic; color: #666; font-size: 0.9rem; margin-top: 5px;">Figure 1: A simple Triangle Graph rendered with TikZ</p>
+  <style>
+    @media (prefers-color-scheme: dark) {
+      .tikz-graph svg { filter: invert(1) hue-rotate(180deg); }
+    }
+    /* al-folio 테마의 다크모드 클래스에 대응 (보통 body에 .dark 등이 붙음) */
+    body.dark .tikz-graph svg { filter: invert(1) hue-rotate(180deg); }
+  </style>
+
+  <div class="tikz-graph">
+    <script type="text/tikz">
+      {% raw %}
+      \begin{tikzpicture}[node distance={30mm}, thick, main/.style = {draw, circle}]
+        \node[main] (1) {1};
+        \node[main] (2) [right of=1] {2};
+        \node[main] (3) [above right of=1, xshift=-8mm] {3};
+        \draw (1) -- (2);
+        \draw (2) -- (3);
+        \draw (3) -- (1);
+      \end{tikzpicture}
+      {% endraw %}
+    </script>
+  </div>
+  <p style="font-style: italic; color: #666; font-size: 0.9rem; margin-top: 5px;">Figure 1: A simple Triangle Graph rendered with TikZ</p>
 </div>
+
 
 For this graph, the Laplacian matrix is:
 $$L = \begin{pmatrix}
