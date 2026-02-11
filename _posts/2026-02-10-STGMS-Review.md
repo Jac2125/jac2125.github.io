@@ -91,7 +91,7 @@ $$L = D - A$$
 where $$D$$is the degree matrix (diagonal) and$$A$$ is the adjacency matrix. Consider a simple graph forming a "triangle" ($$K_3$$):
 
 <div style="text-align: center; margin: 2rem 0;">
-  <img src="/assets/img/triangle_graph.jpg" 
+  <img src="/assets/img/IMG_8751.jpeg" 
        alt="Triangle Graph" 
        style="width: 250px; filter: invert(0); transition: filter 0.3s;"
        class="dark:invert" 
