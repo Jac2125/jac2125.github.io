@@ -37,18 +37,7 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{id: "post-",
-      
-        title: "",
-      
-      description: "",
-      section: "Posts",
-      handler: () => {
-        
-          window.location.href = "/blog/2026/2025-03-01-Thoughts-on-Cross-Product/";
-        
-      },
-    },{id: "post-navigating-the-city-with-math-from-navy-waves-to-traffic-waves",
+        },{id: "post-navigating-the-city-with-math-from-navy-waves-to-traffic-waves",
       
         title: "Navigating the City with Math: From Navy Waves to Traffic Waves",
       
@@ -68,6 +57,28 @@ ninja.data = [{
       handler: () => {
         
           window.location.href = "/blog/2025/Knapsack-Problem/";
+        
+      },
+    },{id: "post-traffifoptimization",
+      
+        title: "TraffifOptimization",
+      
+      description: "",
+      section: "Posts",
+      handler: () => {
+        
+          window.location.href = "/blog/2025/Traffic-Optimization/";
+        
+      },
+    },{id: "post-thoughts-on-the-cross-product",
+      
+        title: "Thoughts on the Cross Product",
+      
+      description: "Unpacking the geometric intuition behind the cross product formula.",
+      section: "Posts",
+      handler: () => {
+        
+          window.location.href = "/blog/2025/Thoughts-on-Cross-Product/";
         
       },
     },{id: "post-tsp-s",
