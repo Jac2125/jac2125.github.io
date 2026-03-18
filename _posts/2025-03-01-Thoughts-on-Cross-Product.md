@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Thoughts on the Cross Product: Why Does It Work?
+title: Thoughts on the Cross Product
 date: 2025-03-01
 description: Unpacking the geometric intuition behind the cross product formula.
 tags: math LinearAlgebra
