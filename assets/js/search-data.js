@@ -70,11 +70,11 @@ ninja.data = [{
           window.location.href = "/blog/2025/Traffic-Optimization/";
         
       },
-    },{id: "post-thoughts-on-the-cross-product",
+    },{id: "post-unmasking-the-cross-product-a-determinant-39-s-disguise",
       
-        title: "Thoughts on the Cross Product",
+        title: "Unmasking the Cross Product: A Determinant&#39;s Disguise",
       
-      description: "Unpacking the geometric intuition behind the cross product formula.",
+      description: "Diving deep into the geometric intuition and proofs behind the cross product using rotation matrices and determinants.",
       section: "Posts",
       handler: () => {
         
