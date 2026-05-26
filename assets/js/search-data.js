@@ -37,7 +37,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{id: "post-navigating-the-city-with-math-from-navy-waves-to-traffic-waves",
+        },{id: "post-reading-your-own-mail-what-xhr-interception-actually-is",
+      
+        title: "Reading Your Own Mail: What XHR Interception Actually Is",
+      
+      description: "Starting from a simple question—where does all this data come from?—a math student&#39;s tour through XHR/Fetch interception, the client-server trust boundary, stateless HTTP, and why location (not the tool) decides whether you&#39;re debugging or attacking.",
+      section: "Posts",
+      handler: () => {
+        
+          window.location.href = "/blog/2026/XHR-and-XHR-Intercepts/";
+        
+      },
+    },{id: "post-navigating-the-city-with-math-from-navy-waves-to-traffic-waves",
       
         title: "Navigating the City with Math: From Navy Waves to Traffic Waves",
       
