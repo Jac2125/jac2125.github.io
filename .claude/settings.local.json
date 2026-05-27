@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(///wsl.localhost/ubuntu/home/jaemin/jac2125.github.io/**)",
+      "Bash(cat \"\\\\\\\\\\\\\\\\wsl.localhost\\\\\\\\ubuntu\\\\\\\\home\\\\\\\\jaemin\\\\\\\\jac2125.github.io\\\\\\\\_pages\\\\\\\\about.md\")",
+      "Bash(cat \"\\\\\\\\\\\\\\\\wsl.localhost\\\\\\\\ubuntu\\\\\\\\home\\\\\\\\jaemin\\\\\\\\jac2125.github.io\\\\\\\\_data\\\\\\\\cv.yml\" 2>&1 | head -60)",
+      "Bash(ls \"\\\\\\\\\\\\\\\\wsl.localhost\\\\\\\\ubuntu\\\\\\\\home\\\\\\\\jaemin\\\\\\\\jac2125.github.io\\\\\\\\assets\\\\\\\\img\\\\\\\\\" 2>&1 | head -30)",
+      "Bash(cat \"\\\\\\\\\\\\\\\\wsl.localhost\\\\\\\\ubuntu\\\\\\\\home\\\\\\\\jaemin\\\\\\\\jac2125.github.io\\\\\\\\_posts\\\\\\\\2026-02-10-STGMS-Review.md\" | head -40)",
+      "Bash(cat \"\\\\\\\\\\\\\\\\wsl.localhost\\\\\\\\ubuntu\\\\\\\\home\\\\\\\\jaemin\\\\\\\\jac2125.github.io\\\\\\\\_config.yml\" | grep -E \"\\(social|github|twitter|linkedin|email|instagram\\)\" | head -30)",
+      "Bash(cat \"\\\\\\\\\\\\\\\\wsl.localhost\\\\\\\\ubuntu\\\\\\\\home\\\\\\\\jaemin\\\\\\\\jac2125.github.io\\\\\\\\_config.yml\" | grep -A 30 \"social:\")",
+      "Bash(cat \"\\\\\\\\\\\\\\\\wsl.localhost\\\\\\\\ubuntu\\\\\\\\home\\\\\\\\jaemin\\\\\\\\jac2125.github.io\\\\\\\\_data\\\\\\\\cv.yml\" | tail -80)",
+      "Bash(grep -n \"github_username\\\\|twitter\\\\|linkedin\\\\|email\\\\|contact_note\\\\|repo:\" \"\\\\\\\\\\\\\\\\wsl.localhost\\\\\\\\ubuntu\\\\\\\\home\\\\\\\\jaemin\\\\\\\\jac2125.github.io\\\\\\\\_config.yml\" | head -30)",
+      "Bash(cat \"\\\\\\\\\\\\\\\\wsl.localhost\\\\\\\\ubuntu\\\\\\\\home\\\\\\\\jaemin\\\\\\\\jac2125.github.io\\\\\\\\_projects\\\\\\\\efm32_uart_logger_alfolio.md\" | head -20)"
+    ]
+  }
+}
