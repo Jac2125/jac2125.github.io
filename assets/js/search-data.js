@@ -48,17 +48,6 @@ ninja.data = [{
           window.location.href = "/blog/2026/when-the-t-stat-was-too-good/";
         
       },
-    },{id: "post-when-the-t-stat-was-too-good-to-be-true",
-      
-        title: "When the t-stat Was Too Good to Be True",
-      
-      description: "Rebuilding a broken PEAD test from the ground up — why a cumulative sum breaks a t-test, what the real unit of analysis is, and how a diagnostic journey ended in an honest &quot;no signal here (yet).&quot;",
-      section: "Posts",
-      handler: () => {
-        
-          window.location.href = "/blog/2026/Thoughts-on-Cross-Product/";
-        
-      },
     },{id: "post-reading-your-own-mail-what-xhr-interception-actually-is",
       
         title: "Reading Your Own Mail: What XHR Interception Actually Is",
@@ -101,6 +90,17 @@ ninja.data = [{
       handler: () => {
         
           window.location.href = "/blog/2025/Traffic-Optimization/";
+        
+      },
+    },{id: "post-unmasking-the-cross-product-a-determinant-39-s-disguise",
+      
+        title: "Unmasking the Cross Product: A Determinant&#39;s Disguise",
+      
+      description: "Diving deep into the geometric intuition and proofs behind the cross product using rotation matrices and determinants.",
+      section: "Posts",
+      handler: () => {
+        
+          window.location.href = "/blog/2025/Thoughts-on-Cross-Product/";
         
       },
     },{id: "post-tsp-s",
