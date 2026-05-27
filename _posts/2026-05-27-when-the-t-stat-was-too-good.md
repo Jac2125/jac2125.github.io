@@ -49,7 +49,7 @@ With that, the rebuild is two layered changes. First, **what** I test: collect o
 t_stat, p_value = ttest_1samp(terminal_cars, 0, alternative='greater')
 ```
 
-The `alternative='greater'` handles the one-sided question directly, retiring the awkward manual `p_value / 2` from the old code. Sanity check: the t-stat dropped from $$ \pm 23 $$ down to about $$ -1.16 $$. The bug was genuinely gone. In a large sample, a small $$ |t| $$ does not mean "I failed to see an effect" — it means "I looked, with plenty of data, and there is none." That distinction set up everything that followed.
+The `alternative='greater'` handles the one-sided question directly, retiring the awkward manual `p_value / 2` from the old code. Sanity check: the t-stat dropped from $$ \pm 23 $$ down to about $$ -1.16 $$. The bug was genuinely gone. In a large sample, a small $$ \abs{t} $$ does not mean "I failed to see an effect" — it means "I looked, with plenty of data, and there is none." That distinction set up everything that followed.
 
 ## The diagnostic journey
 
