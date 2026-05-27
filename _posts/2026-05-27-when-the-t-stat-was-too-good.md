@@ -36,6 +36,7 @@ and the entire formula rests on one quiet assumption: that the sample standard d
 
 The deeper lesson is that the original test was not testing PEAD at all. It was asking, thirty dependent ways, "did this one stock drift?" — a question about a single path, not about a phenomenon.
 
+
 ## The real unit of analysis
 
 PEAD is not a claim about one stock. It is a **cross-event** claim: *across many positive-surprise events, the average drift is greater than zero.* Once you say it that way, the fix becomes obvious — and it is not a fix to the test, it is a fix to what counts as an observation.
