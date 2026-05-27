@@ -11,7 +11,7 @@ I bought some stock right before leaving for the military. It dropped while I wa
 
 So I wrote code to validate it. My first hypothesis was deliberately naive — the plainest possible version of the claim: **if the EPS surprise is positive, then the cumulative abnormal return over the next 30 days (t+1 to t+30) will be greater than zero.** That sentence is testable, which is its virtue; it is also hiding two traps that took the rest of this journey to surface. (The full original script is in the appendix.)
 
-And the first time I ran the significance test, I got t-statistics like \( \pm 12 \) and \( \pm 23 \). I should have been thrilled. Instead something felt wrong. A t-stat that large is not a discovery; it is a smell. This post is about chasing that smell down to its source, rebuilding the test correctly, and then — honestly — finding no signal at all, and why that "failure" is the most useful result I have gotten so far.
+And the first time I ran the significance test, I got t-statistics like $$ \pm 12 $$ and $$ \pm 23 $$. I should have been thrilled. Instead something felt wrong. A t-stat that large is not a discovery; it is a smell. This post is about chasing that smell down to its source, rebuilding the test correctly, and then — honestly — finding no signal at all, and why that "failure" is the most useful result I have gotten so far.
 
 ## Why the original test was broken
 
@@ -27,22 +27,21 @@ The problem is what `ttest_1samp` *assumes* about its input. The t-statistic is
 
 $$ t = \frac{\bar{x} - \mu_0}{s / \sqrt{n}} $$
 
-and the entire formula rests on one quiet assumption: that the sample standard deviation \(s\) correctly measures how much the sample mean wobbles. That only holds if the observations are **independent**. A CAR path violates this as badly as a series possibly can, because \(\text{CAR}_t = \text{CAR}_{t-1} + r_t\) — each value is the previous value plus one small increment. Thirty consecutive points share twenty-nine of their thirty summands. They are not "somewhat correlated"; they are almost perfectly correlated.
+and the entire formula rests on one quiet assumption: that the sample standard deviation $$ s $$ correctly measures how much the sample mean wobbles. That only holds if the observations are **independent**. A CAR path violates this as badly as a series possibly can, because $$ \text{CAR}_t = \text{CAR}_{t-1} + r_t $$ — each value is the previous value plus one small increment. Thirty consecutive points share twenty-nine of their thirty summands. They are not "somewhat correlated"; they are almost perfectly correlated.
 
 > **The Hidden Math: why dependence inflates the t-stat**
 > Start from how variance behaves under addition. For two random variables,
 > $$ \text{Var}(X + Y) = \text{Var}(X) + 2\,\text{Cov}(X, Y) + \text{Var}(Y). $$
-> When \(X\) and \(Y\) are independent, \(\text{Cov}(X, Y) = 0\) and the variances simply add. The t-test is built on exactly this clean addition. But a cumulative sum has enormous positive covariance between neighbors, so the true variance of the path is far larger than the independent-case formula assumes. The test plugs in \(s / \sqrt{n}\) as if the covariance terms were zero — it *underestimates the standard error severely*. A too-small denominator produces a monstrously large \( t \). That is exactly where \( \pm 12 \) and \( \pm 23 \) came from: not a strong effect, but a denominator computed under an assumption that was violated.
+> When $$ X $$ and $$ Y $$ are independent, $$ \text{Cov}(X, Y) = 0 $$ and the variances simply add. The t-test is built on exactly this clean addition. But a cumulative sum has enormous positive covariance between neighbors, so the true variance of the path is far larger than the independent-case formula assumes. The test plugs in $$ s / \sqrt{n} $$ as if the covariance terms were zero — it *underestimates the standard error severely*. A too-small denominator produces a monstrously large $$ t $$. That is exactly where $$ \pm 12 $$ and $$ \pm 23 $$ came from: not a strong effect, but a denominator computed under an assumption that was violated.
 
 The deeper lesson is that the original test was not testing PEAD at all. It was asking, thirty dependent ways, "did this one stock drift?" — a question about a single path, not about a phenomenon.
-
 
 ## The real unit of analysis
 
 PEAD is not a claim about one stock. It is a **cross-event** claim: *across many positive-surprise events, the average drift is greater than zero.* Once you say it that way, the fix becomes obvious — and it is not a fix to the test, it is a fix to what counts as an observation.
 
 > **Unit of Analysis: the quietest decision in any test**
-> Every statistical test silently answers "what is one observation?" before it does anything else. My broken code answered *"one observation = one day,"* so a single event contributed thirty dependent points and the test collapsed. The correct answer is *"one observation = one event."* Then each event contributes exactly **one number** — the terminal cumulative abnormal return \( \text{CAR}_{t+30} \), which summarizes the whole 30-day drift. I am not trying to *remove* the dependence among the thirty within-event points; I am declining to use them as my sample at all. The dependence does not get smaller — it becomes *irrelevant*, because the independence I now need lives between *different* events (Apple's Q2, Microsoft's Q1, and so on), which do not share partial sums.
+> Every statistical test silently answers "what is one observation?" before it does anything else. My broken code answered *"one observation = one day,"* so a single event contributed thirty dependent points and the test collapsed. The correct answer is *"one observation = one event."* Then each event contributes exactly **one number** — the terminal cumulative abnormal return $$ \text{CAR}_{t+30} $$, which summarizes the whole 30-day drift. I am not trying to *remove* the dependence among the thirty within-event points; I am declining to use them as my sample at all. The dependence does not get smaller — it becomes *irrelevant*, because the independence I now need lives between *different* events (Apple's Q2, Microsoft's Q1, and so on), which do not share partial sums.
 
 With that, the rebuild is two layered changes. First, **what** I test: collect one terminal CAR per event into a cross-event sample, instead of testing a per-stock path. Second, **which** test: a one-sample, one-sided test against zero, because PEAD predicts a *direction* (upward), not merely "different from zero":
 
@@ -50,32 +49,32 @@ With that, the rebuild is two layered changes. First, **what** I test: collect o
 t_stat, p_value = ttest_1samp(terminal_cars, 0, alternative='greater')
 ```
 
-The `alternative='greater'` handles the one-sided question directly, retiring the awkward manual `p_value / 2` from the old code. Sanity check: the t-stat dropped from \( \pm 23 \) down to about \( -1.16 \). The bug was genuinely gone. In a large sample, a small \( |t| \) does not mean "I failed to see an effect" — it means "I looked, with plenty of data, and there is none." That distinction set up everything that followed.
+The `alternative='greater'` handles the one-sided question directly, retiring the awkward manual `p_value / 2` from the old code. Sanity check: the t-stat dropped from $$ \pm 23 $$ down to about $$ -1.16 $$. The bug was genuinely gone. In a large sample, a small $$ |t| $$ does not mean "I failed to see an effect" — it means "I looked, with plenty of data, and there is none." That distinction set up everything that followed.
 
 ## The diagnostic journey
 
-A negative t-stat with \( N = 1060 \) events is not a green light to declare "PEAD runs backward." It is an invitation to ask *why*. What follows is a chain of hypotheses, most of which the data killed — and the killing is the point.
+A negative t-stat with $$ N = 1060 $$ events is not a green light to declare "PEAD runs backward." It is an invitation to ask *why*. What follows is a chain of hypotheses, most of which the data killed — and the killing is the point.
 
-The first three numbers already told a story: mean terminal CAR \( -0.0020 \), but **median** \( +0.0009 \), with only \( 51\% \) of events positive. A mean and median of opposite sign means a left-skewed distribution: most events sit near zero, while a few extreme negatives drag the mean down. So the negative sign was never evidence of reverse drift; it was contamination from a minority of events.
+The first three numbers already told a story: mean terminal CAR $$ -0.0020 $$, but **median** $$ +0.0009 $$, with only $$ 51\% $$ of events positive. A mean and median of opposite sign means a left-skewed distribution: most events sit near zero, while a few extreme negatives drag the mean down. So the negative sign was never evidence of reverse drift; it was contamination from a minority of events.
 
-Bucketing events by surprise magnitude found the contamination precisely. The strongest-surprise bucket showed a surprise *range* up to **1671%** — which is impossible as a real earnings beat and only happens when the denominator (expected EPS) is near zero. An estimate of \$0.01 against an actual of \$0.18 explodes the ratio. That bucket was not "great earnings"; it was a set of events where the surprise *metric itself* had broken. Capping surprise at a sane threshold pulled the mean back to roughly zero and flipped the t-stat positive — but only to \( +0.09 \). Removing contamination explained why the mean was *negative*; it did not produce a *signal*.
+Bucketing events by surprise magnitude found the contamination precisely. The strongest-surprise bucket showed a surprise *range* up to **1671%** — which is impossible as a real earnings beat and only happens when the denominator (expected EPS) is near zero. An estimate of \$0.01 against an actual of \$0.18 explodes the ratio. That bucket was not "great earnings"; it was a set of events where the surprise *metric itself* had broken. Capping surprise at a sane threshold pulled the mean back to roughly zero and flipped the t-stat positive — but only to $$ +0.09 $$. Removing contamination explained why the mean was *negative*; it did not produce a *signal*.
 
 That left two suspects. One was the surprise definition — but the raw data carried both `EPS Estimate` and `Reported EPS`, confirming the surprise was measured against analyst consensus, which is exactly right for PEAD. Suspect dismissed. The other was **event timing**: announcements released after the market close are first tradable the *next* session, so aligning the window to the calendar date can be off by a day. Inspecting the timestamps showed announcements clustered in two groups — after-hours *and* pre-market — meaning any fixed "+1 day" rule would misalign the two groups in *opposite* directions, plausibly cancelling the signal in the average.
 
-This suspect felt strong, and the tempting move was to write the fiddly timezone-and-trading-calendar code to fix it. Instead I drew the **average CAR path** first — the most diagnostic picture in PEAD research — by averaging across events at each day \( t+1, \dots, t+30 \). The verdict was decisive *against* my own hypothesis:
+This suspect felt strong, and the tempting move was to write the fiddly timezone-and-trading-calendar code to fix it. Instead I drew the **average CAR path** first — the most diagnostic picture in PEAD research — by averaging across events at each day $$ t+1, \dots, t+30 $$. The verdict was decisive *against* my own hypothesis:
 
 | day | mean CAR |
 |---|---|
-| t+1 | \( -0.0018 \) |
-| t+5 | \( -0.0010 \) |
-| t+10 | \( -0.0005 \) |
-| t+20 | \( -0.0015 \) |
-| t+30 | \( -0.0038 \) |
+| t+1 | $$ -0.0018 $$ |
+| t+5 | $$ -0.0010 $$ |
+| t+10 | $$ -0.0005 $$ |
+| t+20 | $$ -0.0015 $$ |
+| t+30 | $$ -0.0038 $$ |
 
-If timing misalignment were the culprit, the first reaction day's large jump would sit inside the window and the path would show a visible step near \( t+1 \). It does not. The path is flat from day one — a narrow negative band that never lifts. **Timing was not the culprit.** Drawing the picture before doing the surgery saved me from writing careful code in service of a wrong theory.
+If timing misalignment were the culprit, the first reaction day's large jump would sit inside the window and the path would show a visible step near $$ t+1 $$. It does not. The path is flat from day one — a narrow negative band that never lifts. **Timing was not the culprit.** Drawing the picture before doing the surgery saved me from writing careful code in service of a wrong theory.
 
 > **Mathematical Nuance: what flatness rules out**
-> The signal-to-noise ratio is the whole story. The mean terminal CAR is about \( -0.2\% \) while its standard deviation across events is \( 5.5\% \). The signal is roughly \( 0.036 \) of the noise. With \( N \approx 1000 \), the \( \sqrt{n} \) in the denominator is a magnifying glass — a real effect of even modest size would surface as a respectable \( t \). It does not surface. That is not "underpowered"; it is "powered, and empty."
+> The signal-to-noise ratio is the whole story. The mean terminal CAR is about $$ -0.2\% $$ while its standard deviation across events is $$ 5.5\% $$. The signal is roughly $$ 0.036 $$ of the noise. With $$ N \approx 1000 $$, the $$ \sqrt{n} $$ in the denominator is a magnifying glass — a real effect of even modest size would surface as a respectable $$ t $$. It does not surface. That is not "underpowered"; it is "powered, and empty."
 
 The honest conclusion is unglamorous: **in this sample, the PEAD drift is simply absent.** And that actually agrees with theory once you look at the universe — NVIDIA, Alphabet, Apple, Microsoft, Amazon. These are the most-watched megacaps on earth, where thousands of analysts price in information instantly. PEAD has always been strongest in *small, lightly-covered, less-liquid* stocks. Finding no drift in megacaps is not a contradiction of the theory; it is a confirmation of where the theory says drift should *not* be.
 
@@ -83,17 +82,17 @@ The honest conclusion is unglamorous: **in this sample, the PEAD drift is simply
 
 The path forward almost chooses itself: **swap the universe for smaller-cap stocks** and rerun the identical pipeline. I am choosing this over a more ambitious move — piling on extra conditioning variables (prior-quarter EPS trends, market regime, and so on) — for a deliberate reason. Changing only the cap size is a *controlled experiment*: if the signal reappears, "megacap efficiency" is confirmed as the explanation, because nothing else moved. Adding five variables at once would leave me unable to say which one mattered if the signal showed up — or stayed hidden.
 
-And there is a trap waiting precisely here, the one I could feel before I could name it: the urge to keep changing variables *until a signal appears.* This is dangerous not because it wastes time but because it manufactures false signals. At the \( 5\% \) level, one in twenty tests is significant by pure chance, so sweeping twenty variable combinations will hand me a "discovery" that is nothing but noise — and a person who *wants* a signal will stop exactly there and believe it. That is p-hacking, and it is the single biggest reason empirical finance fails to replicate. The defense is counterintuitive: not searching faster, but committing to a rule *before* I look. Write the hypothesis and its falsification condition first; accept the one result; and when I eventually do sweep many variables, correct for multiplicity (Bonferroni, or controlling the false discovery rate) so that twenty attempts face a stricter bar than one.
+And there is a trap waiting precisely here, the one I could feel before I could name it: the urge to keep changing variables *until a signal appears.* This is dangerous not because it wastes time but because it manufactures false signals. At the $$ 5\% $$ level, one in twenty tests is significant by pure chance, so sweeping twenty variable combinations will hand me a "discovery" that is nothing but noise — and a person who *wants* a signal will stop exactly there and believe it. That is p-hacking, and it is the single biggest reason empirical finance fails to replicate. The defense is counterintuitive: not searching faster, but committing to a rule *before* I look. Write the hypothesis and its falsification condition first; accept the one result; and when I eventually do sweep many variables, correct for multiplicity (Bonferroni, or controlling the false discovery rate) so that twenty attempts face a stricter bar than one.
 
-When I left for the military, the market moved without me and I could only watch. What I am building now is the opposite posture — not predicting where a price goes, but learning to ask a question so carefully that the answer, even when it is "no," is one I can trust. The first honest "no" is already worth more than the \( \pm 23 \) that started all this.
+When I left for the military, the market moved without me and I could only watch. What I am building now is the opposite posture — not predicting where a price goes, but learning to ask a question so carefully that the answer, even when it is "no," is one I can trust. The first honest "no" is already worth more than the $$ \pm 23 $$ that started all this.
 
 ---
 
-## Appendix: the original script
+## Appendix: the rebuilt script
 
-This is my first attempt, exactly as written — including the two flaws this post dissects: the per-event `ttest_1samp(car, 0)` on a cumulative-sum path (line 72), and the dangling `ttest_ind` on `CAR_Mean` that sat after the CSV write and was never reported (line 94). I am keeping it unedited as the honest starting point.
+This is the cleaned-up version after the rebuild — the cross-event design the post argues for, with the surprise cap applied and the dead code removed. The window is [t+1, t+30] (the announcement-day jump is the immediate reaction, not drift, so it is excluded), and the per-event statistic is the terminal CAR, tested across events with a one-sample, one-sided t-test. The exploratory diagnostics (surprise buckets, the average-CAR path, the percentile checks) lived in the same script while I was hunting the problem, but they are left out here so the appendix shows the final test cleanly rather than the scaffolding around it.
 
-```ptyhon
+```python
 import yfinance as yf
 import pandas as pd
 import statsmodels.api as sm
