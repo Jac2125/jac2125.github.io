@@ -76,11 +76,11 @@ The most direct way to watch the conversation from inside the page is **monkey-p
 
 **Definition.** In JavaScript, functions are *first-class values*—you can store one in a variable and reassign it. `window.fetch` is just a function value hanging off the global object. So you can grab the original, stash it under another name, and put your own wrapper in its place.
 
-**Intuition.** It's function composition. If the original is \( f \), you install
+**Intuition.** It's function composition. If the original is \(f\), you install
 
 $$ f'(x) = (\text{after} \circ f \circ \text{before})(x) $$
 
-where `before` peeks at the arguments (the outgoing request) and `after` peeks at the result (the incoming response), while \( f \) itself runs untouched in the middle.
+where `before` peeks at the arguments (the outgoing request) and `after` peeks at the result (the incoming response), while \(f\) itself runs untouched in the middle.
 
 ```javascript
 // (1) Keep the original under a new name. Like g = f before we reassign f.

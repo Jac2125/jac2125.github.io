@@ -27,12 +27,12 @@ The problem is what `ttest_1samp` *assumes* about its input. The t-statistic is
 
 $$ t = \frac{\bar{x} - \mu_0}{s / \sqrt{n}} $$
 
-and the entire formula rests on one quiet assumption: that the sample standard deviation \( s \) correctly measures how much the sample mean wobbles. That only holds if the observations are **independent**. A CAR path violates this as badly as a series possibly can, because \( \text{CAR}_t = \text{CAR}_{t-1} + r_t \) — each value is the previous value plus one small increment. Thirty consecutive points share twenty-nine of their thirty summands. They are not "somewhat correlated"; they are almost perfectly correlated.
+and the entire formula rests on one quiet assumption: that the sample standard deviation \(s\) correctly measures how much the sample mean wobbles. That only holds if the observations are **independent**. A CAR path violates this as badly as a series possibly can, because \(\text{CAR}_t = \text{CAR}_{t-1} + r_t\) — each value is the previous value plus one small increment. Thirty consecutive points share twenty-nine of their thirty summands. They are not "somewhat correlated"; they are almost perfectly correlated.
 
 > **The Hidden Math: why dependence inflates the t-stat**
 > Start from how variance behaves under addition. For two random variables,
 > $$ \text{Var}(X + Y) = \text{Var}(X) + 2\,\text{Cov}(X, Y) + \text{Var}(Y). $$
-> When \( X \) and \( Y \) are independent, \( \text{Cov}(X, Y) = 0 \) and the variances simply add. The t-test is built on exactly this clean addition. But a cumulative sum has enormous positive covariance between neighbors, so the true variance of the path is far larger than the independent-case formula assumes. The test plugs in \( s / \sqrt{n} \) as if the covariance terms were zero — it *underestimates the standard error severely*. A too-small denominator produces a monstrously large \( t \). That is exactly where \( \pm 12 \) and \( \pm 23 \) came from: not a strong effect, but a denominator computed under an assumption that was violated.
+> When \(X\) and \(Y\) are independent, \(\text{Cov}(X, Y) = 0\) and the variances simply add. The t-test is built on exactly this clean addition. But a cumulative sum has enormous positive covariance between neighbors, so the true variance of the path is far larger than the independent-case formula assumes. The test plugs in \(s / \sqrt{n}\) as if the covariance terms were zero — it *underestimates the standard error severely*. A too-small denominator produces a monstrously large \( t \). That is exactly where \( \pm 12 \) and \( \pm 23 \) came from: not a strong effect, but a denominator computed under an assumption that was violated.
 
 The deeper lesson is that the original test was not testing PEAD at all. It was asking, thirty dependent ways, "did this one stock drift?" — a question about a single path, not about a phenomenon.
 
