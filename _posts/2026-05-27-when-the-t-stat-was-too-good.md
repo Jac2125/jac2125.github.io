@@ -11,7 +11,7 @@ I bought some stock right before leaving for the military. It dropped while I wa
 
 So I wrote code to validate it. My first hypothesis was deliberately naive — the plainest possible version of the claim: **if the EPS surprise is positive, then the cumulative abnormal return over the next 30 days (t+1 to t+30) will be greater than zero.** That sentence is testable, which is its virtue; it is also hiding two traps that took the rest of this journey to surface. (The full original script is in the appendix.)
 
-And the first time I ran the significance test, I got t-statistics like $$ \pm 12 $$ and $$ \pm 23 $$. I should have been thrilled. Instead something felt wrong. A t-stat that large is not a discovery; it is a smell. This post is about chasing that smell down to its source, rebuilding the test correctly, and then — honestly — finding no signal at all, and why that "failure" is the most useful result I have gotten so far.
+And the first time I ran the significance test, I got t-statistics like $$ \pm 12 $$ and $$ \pm 23 $$. I should have been thrilled. Instead something felt wrong. A t-stat that large is not a discovery; it is a smell. For a while I half-believed the numbers — surely my data really was that strong — because I trusted that if I just computed the standard deviation correctly, the test would handle the rest on its own. That trust was the actual mistake, and finding the exact place it broke is the real starting point of this post. What follows is chasing that smell down to its source, rebuilding the test correctly, and then — honestly — finding no signal at all, and why that "failure" is the most useful result I have gotten so far.
 
 ## Why the original test was broken
 
@@ -27,7 +27,7 @@ The problem is what `ttest_1samp` *assumes* about its input. The t-statistic is
 
 $$ t = \frac{\bar{x} - \mu_0}{s / \sqrt{n}} $$
 
-and the entire formula rests on one quiet assumption: that the sample standard deviation $$ s $$ correctly measures how much the sample mean wobbles. That only holds if the observations are **independent**. A CAR path violates this as badly as a series possibly can, because $$ \text{CAR}_t = \text{CAR}_{t-1} + r_t $$ — each value is the previous value plus one small increment. Thirty consecutive points share twenty-nine of their thirty summands. They are not "somewhat correlated"; they are almost perfectly correlated.
+and the entire formula rests on one quiet assumption hiding in the denominator: that $$ s / \sqrt{n} $$ correctly measures how much the sample mean wobbles. That only holds if the observations are **independent**. A CAR path violates this as badly as a series possibly can, because $$ \text{CAR}_t = \text{CAR}_{t-1} + r_t $$ — each value is the previous value plus one small increment. Thirty consecutive points share twenty-nine of their thirty summands. They are not "somewhat correlated"; they are almost perfectly correlated.
 
 > **The Hidden Math: why dependence inflates the t-stat**
 > Start from how variance behaves under addition. For two random variables,
@@ -35,6 +35,13 @@ and the entire formula rests on one quiet assumption: that the sample standard d
 > When $$ X $$ and $$ Y $$ are independent, $$ \text{Cov}(X, Y) = 0 $$ and the variances simply add. The t-test is built on exactly this clean addition. But a cumulative sum has enormous positive covariance between neighbors, so the true variance of the path is far larger than the independent-case formula assumes. The test plugs in $$ s / \sqrt{n} $$ as if the covariance terms were zero — it *underestimates the standard error severely*. A too-small denominator produces a monstrously large $$ t $$. That is exactly where $$ \pm 12 $$ and $$ \pm 23 $$ came from: not a strong effect, but a denominator computed under an assumption that was violated.
 
 The deeper lesson is that the original test was not testing PEAD at all. It was asking, thirty dependent ways, "did this one stock drift?" — a question about a single path, not about a phenomenon.
+
+But there is a more basic confusion underneath, and it is the one I promised in the intro — the belief that computing the standard deviation correctly would let the test take care of the rest. That belief is wrong in a precise and instructive way.
+
+> **A Common Misread: the standard deviation does not contain the covariance**
+> My instinct was: doesn't squaring the standard deviation give variance, and doesn't variance absorb the covariance terms? It does — but only for the variance of a *sum*. The sample standard deviation $$ s $$ is not a sum of the points; it measures how far each point sits from the mean, $$ s^2 = \frac{1}{n-1}\sum_i (x_i - \bar{x})^2 $$, with no cross term $$ x_i x_j $$ anywhere. So $$ s $$ has no slot for covariance and assumes nothing about independence — it honestly reports the spread. The independence assumption sneaks in one step later, when $$ s $$ is divided by $$ \sqrt{n} $$ to estimate the standard error of the *mean*, because the mean **is** a sum, $$ \bar{X} = \frac{1}{n}\sum_i X_i $$, and its true variance is
+> $$ \text{Var}(\bar{X}) = \frac{1}{n^2}\Big(\sum_i \text{Var}(X_i) + \sum_{i \neq j}\text{Cov}(X_i, X_j)\Big). $$
+> Note the capital $$ X_i $$: covariance is defined between *random variables*, not between two numbers already observed. The clean $$ s/\sqrt{n} $$ is what you get only when every $$ \text{Cov}(X_i, X_j) = 0 $$ — when the observations are independent. A CAR path is the opposite: $$ X_i = \text{CAR}_i $$ and $$ \text{CAR}_2 = \text{CAR}_1 + r_2 $$, so neighbors carry enormous positive covariance and those terms refuse to vanish. The sharpest way to say it is the thing that finally made it click for me: feeding one event's 30-point path into the test is not "thirty independent observations" — it is *one drift, looked at thirty times*, dressed up as thirty. The test divides by $$ \sqrt{30} $$ as if it held thirty independent draws, when the independent information is closer to one. That is why no amount of computing $$ s $$ "correctly" could have saved it: the error was never in $$ s $$, it was in the $$ \sqrt{n} $$ that silently assumed independence I did not have.
 
 ## The real unit of analysis
 
@@ -49,7 +56,7 @@ With that, the rebuild is two layered changes. First, **what** I test: collect o
 t_stat, p_value = ttest_1samp(terminal_cars, 0, alternative='greater')
 ```
 
-The `alternative='greater'` handles the one-sided question directly, retiring the awkward manual `p_value / 2` from the old code. Sanity check: the t-stat dropped from $$ \pm 23 $$ down to about $$ -1.16 $$. The bug was genuinely gone. In a large sample, a small $$ \abs{t} $$ does not mean "I failed to see an effect" — it means "I looked, with plenty of data, and there is none." That distinction set up everything that followed.
+The `alternative='greater'` handles the one-sided question directly, retiring the awkward manual `p_value / 2` from the old code. Sanity check: the t-stat dropped from $$ \pm 23 $$ down to about $$ -1.16 $$. The bug was genuinely gone. In a large sample, a small $$ |t| $$ does not mean "I failed to see an effect" — it means "I looked, with plenty of data, and there is none." That distinction set up everything that followed.
 
 ## The diagnostic journey
 
